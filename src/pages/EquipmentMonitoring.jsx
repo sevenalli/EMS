@@ -726,7 +726,7 @@ const EquipmentMonitoring = () => {
                                     <div
                                         className="absolute"
                                         style={{
-                                            bottom: '15%',
+                                            bottom: '16%',
                                             left: '20%',
                                             width: '80%',
                                             height: '90%',
