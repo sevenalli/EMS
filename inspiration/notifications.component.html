@@ -1,0 +1,217 @@
+<div class="notifications-container">
+  <!-- Header -->
+  <div class="notifications-header">
+    <div class="header-left">
+      <h2><i class="bi bi-bell-fill"></i> Notifications en Temps Réel</h2>
+      <div class="live-indicator" *ngIf="!isHistoryMode">
+        <span class="pulse-dot"></span>
+        <span>LIVE</span>
+      </div>
+      <div class="history-indicator" *ngIf="isHistoryMode">
+        <i class="bi bi-clock-history"></i>
+        <span>HISTORY</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <!-- History Panel -->
+      <app-history-panel (modeChange)="onModeChange($event)" (timeRangeChange)="onTimeRangeChange($event)">
+      </app-history-panel>
+    </div>
+  </div>
+
+  <!-- Stats (Live mode only) -->
+  <div class="header-stats" *ngIf="!isHistoryMode">
+    <span class="stat-badge critical" *ngIf="getCriticalCount() > 0">
+      <i class="bi bi-exclamation-octagon-fill"></i> {{ getCriticalCount() }} Critical
+    </span>
+    <span class="stat-badge active">
+      <i class="bi bi-lightning-charge"></i> {{ getActiveCount() }} Active
+    </span>
+    <span class="stat-badge unread">
+      <i class="bi bi-envelope"></i> {{ getUnreadCount() }} Unread
+    </span>
+  </div>
+
+  <!-- History Mode Banner -->
+  <div class="history-mode-banner" *ngIf="isHistoryMode">
+    <div class="banner-content">
+      <i class="bi bi-clock-history"></i>
+      <span *ngIf="historyTimeRange">
+        Viewing notifications from {{ historyTimeRange.startTime | date:'short' }} to {{ historyTimeRange.endTime |
+        date:'short' }}
+      </span>
+      <span *ngIf="isLoadingHistory" class="loading-spinner">
+        <i class="bi bi-arrow-repeat spin"></i> Loading...
+      </span>
+    </div>
+    <div class="banner-error" *ngIf="historyError">
+      <i class="bi bi-exclamation-triangle"></i> {{ historyError }}
+    </div>
+  </div>
+
+  <!-- Playback Controls -->
+  <div class="playback-controls" *ngIf="isHistoryMode && playbackTimestamps.length > 0">
+    <div class="playback-bar">
+      <!-- Play/Pause Button -->
+      <button class="playback-btn" (click)="togglePlayback()" [title]="isPlaying ? 'Pause' : 'Play'">
+        <i class="bi" [ngClass]="isPlaying ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+      </button>
+
+      <!-- Skip Back -->
+      <button class="playback-btn small" (click)="prevFrame()" title="Previous Frame">
+        <i class="bi bi-skip-backward-fill"></i>
+      </button>
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <input type="range" class="playback-slider" [min]="0" [max]="playbackTimestamps.length - 1"
+          [value]="playbackIndex" (input)="seekTo($any($event.target).valueAsNumber)">
+        <div class="progress-fill" [style.width.%]="getPlaybackProgress()"></div>
+      </div>
+
+      <!-- Skip Forward -->
+      <button class="playback-btn small" (click)="nextFrame()" title="Next Frame">
+        <i class="bi bi-skip-forward-fill"></i>
+      </button>
+
+      <!-- Speed Selector -->
+      <div class="speed-selector">
+        <button class="speed-btn" [class.active]="playbackSpeed === 1" (click)="setPlaybackSpeed(1)">1x</button>
+        <button class="speed-btn" [class.active]="playbackSpeed === 2" (click)="setPlaybackSpeed(2)">2x</button>
+        <button class="speed-btn" [class.active]="playbackSpeed === 4" (click)="setPlaybackSpeed(4)">4x</button>
+        <button class="speed-btn" [class.active]="playbackSpeed === 8" (click)="setPlaybackSpeed(8)">8x</button>
+      </div>
+
+      <!-- Current Time Display -->
+      <div class="playback-time">
+        <i class="bi bi-clock"></i>
+        <span *ngIf="currentPlaybackTime">{{ currentPlaybackTime | date:'HH:mm:ss' }}</span>
+      </div>
+
+      <!-- Frame Counter -->
+      <div class="frame-counter">
+        {{ playbackIndex + 1 }} / {{ playbackTimestamps.length }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters (Live mode only) -->
+  <div class="filters-bar" *ngIf="!isHistoryMode">
+    <div class="filter-group">
+      <label>Type:</label>
+      <select [(ngModel)]="typeFilter" (change)="applyFilters()">
+        <option value="all">All Types</option>
+        <option value="Critical">Critical</option>
+        <option value="Alarm">Alarm</option>
+        <option value="Warning">Warning</option>
+        <option value="Fault">Fault</option>
+        <option value="Info">Info</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Category:</label>
+      <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
+        <option value="all">All Categories</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="applyFilters()">
+    </div>
+    <div class="filter-actions">
+      <button class="btn-filter" [class.active]="showActiveOnly" (click)="toggleActiveOnly()">
+        <i class="bi bi-lightning"></i> Active Only
+      </button>
+      <button class="btn-action" (click)="markAllAsRead()">
+        <i class="bi bi-check2-all"></i> Mark All Read
+      </button>
+      <button class="btn-action danger" (click)="clearAllInactive()">
+        <i class="bi bi-trash"></i> Clear Inactive
+      </button>
+    </div>
+  </div>
+
+  <!-- Notifications List (Live Mode) -->
+  <div class="notifications-list" *ngIf="!isHistoryMode">
+    <div *ngIf="filteredNotifications.length === 0" class="empty-state">
+      <i class="bi bi-bell-slash"></i>
+      <p>No notifications</p>
+    </div>
+
+    <div *ngFor="let notification of filteredNotifications" class="notification-card"
+      [class.unread]="!notification.isRead" [class.active]="notification.isActive"
+      [class.critical]="notification.type === 'Critical'" [class.alarm]="notification.type === 'Alarm'"
+      [class.warning]="notification.type === 'Warning'" [class.fault]="notification.type === 'Fault'"
+      [class.info]="notification.type === 'Info'" (click)="markAsRead(notification.id)">
+
+      <div class="notification-icon">
+        <i [ngClass]="getTypeIcon(notification.type)"></i>
+      </div>
+
+      <div class="notification-content">
+        <div class="notification-header">
+          <span [ngClass]="getTypeClass(notification.type)">{{ notification.type }}</span>
+          <span class="category-badge">
+            <i [ngClass]="getCategoryIcon(notification.category)"></i>
+            {{ notification.category }}
+          </span>
+          <span class="timestamp">{{ formatDate(notification.timestamp) }}</span>
+        </div>
+        <div class="notification-message">{{ notification.message }}</div>
+        <div class="notification-tag">{{ notification.tagName }}</div>
+      </div>
+
+      <div class="notification-status">
+        <span class="status-dot" [class.active]="notification.isActive"></span>
+        <span class="status-text">{{ notification.isActive ? 'ACTIVE' : 'CLEARED' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Notifications List -->
+  <div class="notifications-list" *ngIf="isHistoryMode">
+    <div *ngIf="historyNotifications.length === 0 && !isLoadingHistory && !historyError" class="empty-state">
+      <i class="bi bi-clock-history"></i>
+      <p>Select a time range to view historical notifications</p>
+    </div>
+
+    <div *ngFor="let notification of historyNotifications" class="notification-card"
+      [class.active]="notification.isActive" [class.critical]="notification.type === 'Critical'"
+      [class.alarm]="notification.type === 'Alarm'" [class.warning]="notification.type === 'Warning'"
+      [class.fault]="notification.type === 'Fault'" [class.info]="notification.type === 'Info'">
+
+      <div class="notification-icon">
+        <i [ngClass]="getTypeIcon(notification.type)"></i>
+      </div>
+
+      <div class="notification-content">
+        <div class="notification-header">
+          <span [ngClass]="getTypeClass(notification.type)">{{ notification.type }}</span>
+          <span class="category-badge">
+            <i [ngClass]="getCategoryIcon(notification.category)"></i>
+            {{ notification.category }}
+          </span>
+          <span class="timestamp">{{ notification.timestamp | date:'short' }}</span>
+        </div>
+        <div class="notification-message">{{ notification.message }}</div>
+        <div class="notification-tag">{{ notification.tagName }}</div>
+      </div>
+
+      <div class="notification-status">
+        <span class="status-dot" [class.active]="notification.isActive"></span>
+        <span class="status-text">{{ notification.isActive ? 'ACTIVE' : 'CLEARED' }}</span>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-controls" *ngIf="historyTotalPages > 1">
+      <button class="page-btn" (click)="loadPrevPage()" [disabled]="historyPage <= 1">
+        <i class="bi bi-chevron-left"></i> Previous
+      </button>
+      <span class="page-info">Page {{ historyPage }} of {{ historyTotalPages }}</span>
+      <button class="page-btn" (click)="loadNextPage()" [disabled]="historyPage >= historyTotalPages">
+        Next <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
