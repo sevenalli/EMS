@@ -1,32 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import mqtt from 'mqtt'
 
-// Key mappings from spec
-const KEY_MAPPINGS = {
-    engine_hours: 'Compteur_d_heures_de_service_heures',
-    load_weight: 'Charge_brute_en_tonnes',
-    wind_speed: 'Vitesse_du_vent_valeur_reelle',
-    fuel_level: 'Reservoir_de_carburant_diesel_niveau_de_remplissage_en',
-    is_active: 'Kranhauptschalter_ist_EIN',
-    hydraulic_temp: 'Temperature_du_systeme_hydraulique',
-    diesel_running: 'Dieselmotor_in_Betrieb',
-    motor_temp: 'Mec_levage_1_temperature_du_moteur_en_degres_Celsius',
-}
+import { TAG_MAPPINGS } from '../data/telemetryData'
 
 // Mock telemetry data for simulation
 const generateMockTelemetry = (equipmentId) => {
     const baseValue = equipmentId.charCodeAt(0)
     return {
         ts: new Date().toISOString(),
-        data: {
-            [KEY_MAPPINGS.hydraulic_temp]: 45 + Math.random() * 20,
-            [KEY_MAPPINGS.engine_hours]: 100 + Math.floor(Math.random() * 500),
-            [KEY_MAPPINGS.is_active]: Math.random() > 0.3,
-            [KEY_MAPPINGS.load_weight]: 5 + Math.random() * 15,
-            [KEY_MAPPINGS.wind_speed]: Math.floor(Math.random() * 20),
-            [KEY_MAPPINGS.fuel_level]: 40 + Math.random() * 50,
-            [KEY_MAPPINGS.diesel_running]: Math.random() > 0.4,
-            [KEY_MAPPINGS.motor_temp]: 30 + Math.random() * 15,
-        }
+        data: Object.entries(TAG_MAPPINGS).reduce((acc, [key, mqttKey]) => {
+            acc[mqttKey] = Math.random() * 100
+            return acc
+        }, {})
     }
 }
 
@@ -34,18 +19,24 @@ const generateMockTelemetry = (equipmentId) => {
 const parseTelemetry = (payload) => {
     if (!payload?.data) return null
 
-    const data = payload.data
-    return {
-        timestamp: payload.ts,
-        engineHours: data[KEY_MAPPINGS.engine_hours] || 0,
-        loadWeight: data[KEY_MAPPINGS.load_weight] || 0,
-        windSpeed: data[KEY_MAPPINGS.wind_speed] || 0,
-        fuelLevel: data[KEY_MAPPINGS.fuel_level] || 0,
-        isActive: data[KEY_MAPPINGS.is_active] ?? false,
-        hydraulicTemp: data[KEY_MAPPINGS.hydraulic_temp] || 0,
-        dieselRunning: data[KEY_MAPPINGS.diesel_running] ?? false,
-        motorTemp: data[KEY_MAPPINGS.motor_temp] || 0,
+    const data = payload.data || payload // Handle both wrapped and unwrapped data
+    const parsed = {
+        timestamp: payload.ts || new Date().toISOString(),
+        // Extract metadata fields from MQTT message
+        site: payload.site || null,
+        terminal: payload.terminal || null,
+        type: payload.type || null,
+        host: payload.host || null,
     }
+
+    // Map all keys from TAG_MAPPINGS
+    Object.entries(TAG_MAPPINGS).forEach(([friendlyKey, mqttKey]) => {
+        if (data[mqttKey] !== undefined) {
+            parsed[friendlyKey] = data[mqttKey]
+        }
+    })
+
+    return parsed
 }
 
 /**
@@ -64,6 +55,7 @@ export const useMqtt = (equipmentId, options = {}) => {
     } = options
 
     const [telemetry, setTelemetry] = useState(null)
+    const [rawData, setRawData] = useState(null)
     const [isConnected, setIsConnected] = useState(false)
     const [error, setError] = useState(null)
     const clientRef = useRef(null)
@@ -101,10 +93,11 @@ export const useMqtt = (equipmentId, options = {}) => {
     useEffect(() => {
         if (useMock || !equipmentId) return
 
+        let isMounted = true
+
         const connectMqtt = async () => {
             try {
-                // Dynamic import for MQTT client
-                const mqtt = await import('mqtt')
+                console.log(`[useMqtt] Connecting to ${brokerUrl} with topic ${topic}`)
 
                 const client = mqtt.connect(brokerUrl, {
                     clientId: `ems-${equipmentId}-${Math.random().toString(16).slice(2, 8)}`,
@@ -116,11 +109,20 @@ export const useMqtt = (equipmentId, options = {}) => {
                 clientRef.current = client
 
                 client.on('connect', () => {
+                    // Only subscribe if the component is still mounted
+                    if (!isMounted) {
+                        client.end(true)
+                        return
+                    }
+                    console.log('MQTT Connected to', brokerUrl)
                     setIsConnected(true)
                     setError(null)
                     client.subscribe(topic, (err) => {
                         if (err) {
+                            console.error('Subscription error:', err)
                             setError(`Subscription error: ${err.message}`)
+                        } else {
+                            console.log('Subscribed to:', topic)
                         }
                     })
                 })
@@ -130,12 +132,15 @@ export const useMqtt = (equipmentId, options = {}) => {
                         const payload = JSON.parse(message.toString())
                         const parsed = parseTelemetry(payload)
                         setTelemetry(parsed)
+                        // Also expose raw data for notifications
+                        setRawData(payload.data || payload)
                     } catch (e) {
                         console.error('Failed to parse MQTT message:', e)
                     }
                 })
 
                 client.on('error', (err) => {
+                    console.error('MQTT Error:', err)
                     setError(`MQTT error: ${err.message}`)
                     setIsConnected(false)
                 })
@@ -152,8 +157,9 @@ export const useMqtt = (equipmentId, options = {}) => {
         connectMqtt()
 
         return () => {
+            isMounted = false
             if (clientRef.current) {
-                clientRef.current.end()
+                clientRef.current.end(true) // Force disconnect
                 clientRef.current = null
             }
         }
@@ -167,10 +173,11 @@ export const useMqtt = (equipmentId, options = {}) => {
 
     return {
         telemetry,
+        rawData,
         isConnected,
         error,
         reconnect,
     }
 }
 
-export { KEY_MAPPINGS, parseTelemetry }
+export { TAG_MAPPINGS, parseTelemetry }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useStore } from '../store/store'
+import { useStore, mockData } from '../store/store'
 import {
     ChevronLeft,
     Play,
@@ -45,11 +45,19 @@ import {
 } from '../data/telemetryData'
 import { useHistory } from '../hooks/useHistory'
 import { useMqtt } from '../hooks/useMqtt'
+import { useTopicDiscovery } from '../hooks/useTopicDiscovery'
 
 const TelemetryDashboard = () => {
     const { equipmentId } = useParams()
     const navigate = useNavigate()
     const isDarkMode = useStore((state) => state.isDarkMode)
+
+    // Get equipment port from mock data
+    const equipmentData = mockData.equipment.find(eq => eq.id === equipmentId)
+    const portId = equipmentData?.portId || 'SMA'  // Default to SMA if not found
+
+    // Dynamic topic based on port/equipmentId format
+    const dynamicTopic = `${portId}/${equipmentId}`
 
     // History hook
     const {
@@ -71,37 +79,43 @@ const TelemetryDashboard = () => {
     const [currentPlaybackTime, setCurrentPlaybackTime] = useState(null)
     const playbackRef = useRef(null)
 
-    // MQTT hook for live telemetry - useMock=false for real data
+    // State for MQTT configuration
+    const [brokerUrl, setBrokerUrl] = useState('ws://localhost:9001')
+    const [showSettings, setShowSettings] = useState(false)
+
+    // MQTT hook for live telemetry - useMock=false for real data with dynamic topic
     const { telemetry: mqttTelemetry, isConnected: mqttConnected, error: mqttError } = useMqtt(
         equipmentId,
-        { useMock: false } // Use real MQTT connection
+        {
+            useMock: false,
+            topic: dynamicTopic,
+            brokerUrl
+        } // Use real MQTT connection with dynamic topic
     )
+
+    // Use topic discovery to get fallback data (already discovered)
+    const { getEquipmentData, isEquipmentOnline } = useTopicDiscovery()
+    const discoveredData = getEquipmentData(equipmentId)
 
     // Telemetry data
     const [telemetry, setTelemetry] = useState(DEFAULT_TELEMETRY)
     const [historyData, setHistoryData] = useState([])
 
-    // Live mode - use real MQTT data
+    // Live mode - use real MQTT data or fallback to discovered data
     useEffect(() => {
         if (isHistoryMode) return
 
-        // Map MQTT telemetry to full telemetry format
-        if (mqttTelemetry) {
-            console.log('[TelemetryDashboard] Received MQTT telemetry:', mqttTelemetry)
+        // Use MQTT telemetry if available, otherwise try discovered data
+        const liveData = mqttTelemetry || discoveredData?.latestData
+
+        if (liveData) {
+            console.log('[TelemetryDashboard] Received telemetry:', liveData)
             setTelemetry(prev => ({
                 ...prev,
-                // Map from useMqtt format to our telemetry keys
-                heuresService: mqttTelemetry.engineHours || prev.heuresService,
-                chargeBrute: mqttTelemetry.loadWeight || prev.chargeBrute,
-                vitesseVent: mqttTelemetry.windSpeed || prev.vitesseVent,
-                niveauCarburant: mqttTelemetry.fuelLevel || prev.niveauCarburant,
-                kranHauptschalter: mqttTelemetry.isActive ?? prev.kranHauptschalter,
-                tempHydraulique: mqttTelemetry.hydraulicTemp || prev.tempHydraulique,
-                dieselEnMarche: mqttTelemetry.dieselRunning ?? prev.dieselEnMarche,
-                tempMoteurLevage: mqttTelemetry.motorTemp || prev.tempMoteurLevage,
+                ...liveData
             }))
         }
-    }, [isHistoryMode, mqttTelemetry])
+    }, [isHistoryMode, mqttTelemetry, discoveredData])
 
     // Fetch history data when switching to history mode or changing time range
     useEffect(() => {
@@ -208,7 +222,7 @@ const TelemetryDashboard = () => {
 
     // Get status color for value
     const getStatusColor = (value, thresholds) => {
-        if (!thresholds) return 'text-white'
+        if (!thresholds) return isDarkMode ? 'text-white' : 'text-gray-800'
         if (value >= thresholds.danger) return 'text-red-500'
         if (value >= thresholds.warning) return 'text-amber-500'
         return 'text-green-500'
@@ -232,7 +246,7 @@ const TelemetryDashboard = () => {
                 return (
                     <div className="text-center">
                         <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-2">{widget.label}</div>
-                        <div className="text-4xl font-bold text-white" style={{ fontFamily: "'Segoe UI', system-ui" }}>
+                        <div className={`text-4xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: "'Segoe UI', system-ui" }}>
                             {typeof value === 'number' ? value.toFixed(1) : value}
                         </div>
                         <div className="text-sm font-medium text-gray-400 mt-1">{widget.unit}</div>
@@ -321,7 +335,7 @@ const TelemetryDashboard = () => {
                                 }}
                             />
                         </div>
-                        <div className="text-lg font-bold text-white mt-2" style={{ fontFamily: "'Segoe UI', system-ui" }}>
+                        <div className={`text-lg font-bold mt-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: "'Segoe UI', system-ui" }}>
                             {value?.toFixed(0) || 0}°C
                         </div>
                     </div>
@@ -357,7 +371,7 @@ const TelemetryDashboard = () => {
                 return (
                     <div className="text-center">
                         <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-2">{widget.label}</div>
-                        <div className={`text-3xl font-bold ${isWarning ? 'text-amber-500' : 'text-white'}`} style={{ fontFamily: "'Segoe UI', system-ui" }}>
+                        <div className={`text-3xl font-bold ${isWarning ? 'text-amber-500' : (isDarkMode ? 'text-white' : 'text-gray-800')}`} style={{ fontFamily: "'Segoe UI', system-ui" }}>
                             {value?.toFixed(0) || 0}
                         </div>
                         <div className="text-sm font-medium text-gray-400 mt-1">{widget.unit}</div>
@@ -367,7 +381,7 @@ const TelemetryDashboard = () => {
                 return (
                     <div className="text-center">
                         <div className="text-[11px] font-medium text-gray-400 uppercase">{widget.label}</div>
-                        <div className="text-2xl font-bold text-white">{value?.toFixed?.(1) || value}</div>
+                        <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{value?.toFixed?.(1) || value}</div>
                     </div>
                 )
         }
@@ -414,10 +428,14 @@ const TelemetryDashboard = () => {
                     <div className="text-right flex items-center gap-3">
                         {/* MQTT Connection Status (only show in live mode) */}
                         {!isHistoryMode && (
-                            <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs ${mqttConnected
-                                ? 'bg-green-500/20 text-green-400'
-                                : 'bg-red-500/20 text-red-400'
-                                }`}>
+                            <div
+                                onClick={() => setShowSettings(!showSettings)}
+                                className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs cursor-pointer transition-colors ${mqttConnected
+                                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                                    : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
+                                    }`}
+                                title="Click to configure broker"
+                            >
                                 {mqttConnected ? <Wifi size={14} /> : <WifiOff size={14} />}
                                 {mqttConnected ? 'Connected' : 'Disconnected'}
                             </div>
@@ -432,6 +450,43 @@ const TelemetryDashboard = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Connection Settings Panel */}
+                {showSettings && !isHistoryMode && (
+                    <div className={`px-4 py-3 border-b ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1 max-w-md">
+                                <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>MQTT Broker URL</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={brokerUrl}
+                                        onChange={(e) => setBrokerUrl(e.target.value)}
+                                        className={`flex-1 px-3 py-1.5 rounded text-sm border ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-800'
+                                            }`}
+                                        placeholder="ws://localhost:9001"
+                                    />
+                                    <button
+                                        onClick={() => setBrokerUrl('ws://pi5:9001')}
+                                        className="px-3 py-1.5 rounded bg-blue-500/10 text-blue-500 text-xs font-medium hover:bg-blue-500/20"
+                                    >
+                                        Use Pi5
+                                    </button>
+                                </div>
+                            </div>
+                            {mqttError && (
+                                <div className="flex-1 text-xs text-red-400 flex items-center gap-2">
+                                    <AlertTriangle size={14} />
+                                    {mqttError}
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-2 text-[10px] text-gray-500">
+                            <p>Try <b>ws://pi5:9001</b> if connecting to a Raspberry Pi with hostname 'pi5'.</p>
+                            <p>Ensure your browser allows access to the WebSocket port (no mixed content blocking).</p>
+                        </div>
+                    </div>
+                )}
 
                 {/* History Controls */}
                 {isHistoryMode && (
@@ -491,16 +546,16 @@ const TelemetryDashboard = () => {
 
                             {/* Speed Selector */}
                             <div className="flex gap-1">
-                                {PLAYBACK_SPEEDS.map(speed => (
+                                {PLAYBACK_SPEEDS.map(speedOption => (
                                     <button
-                                        key={speed}
-                                        onClick={() => setPlaybackSpeed(speed)}
-                                        className={`px-2 py-1 rounded text-xs font-medium ${playbackSpeed === speed
+                                        key={speedOption.label}
+                                        onClick={() => setPlaybackSpeed(speedOption.value)}
+                                        className={`px-2 py-1 rounded text-xs font-medium ${playbackSpeed === speedOption.value
                                             ? 'bg-blue-500 text-white'
                                             : 'bg-gray-600/30 text-gray-400 hover:text-white'
                                             }`}
                                     >
-                                        {speed}x
+                                        {speedOption.label}
                                     </button>
                                 ))}
                             </div>

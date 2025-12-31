@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useStore, mockData } from '../store/store'
+import { useTopicDiscovery } from '../hooks/useTopicDiscovery'
 import EquipmentCard from '../components/EquipmentCard'
 import {
     ChevronLeft,
@@ -8,9 +9,13 @@ import {
     Maximize2,
     Grid3X3,
     LayoutGrid,
-    Activity
+    Activity,
+    Wifi,
+    WifiOff,
+    Radio,
+    AlertCircle
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 const Dashboard = () => {
     const navigate = useNavigate()
@@ -18,9 +23,63 @@ const Dashboard = () => {
     const [gridSize, setGridSize] = useState('normal')
     const [isRefreshing, setIsRefreshing] = useState(false)
 
-    const equipmentList = selectedEquipment.length > 0
-        ? mockData.equipment.filter(eq => selectedEquipment.includes(eq.id))
-        : mockData.equipment.slice(0, 4)
+    // Topic discovery hook for real-time equipment detection
+    const {
+        isConnected: mqttConnected,
+        activeEquipment,
+        discoveredPorts,
+        onlineEquipmentCodes,
+        isEquipmentOnline,
+        getEquipmentByPort,
+        getEquipmentData
+    } = useTopicDiscovery({
+        portFilter: selectedPort?.id || null  // Filter by selected port if any
+    })
+
+    // Build equipment list: combine mock data with live MQTT status
+    const equipmentList = useMemo(() => {
+        // If we have online equipment from MQTT, prioritize those
+        if (onlineEquipmentCodes.length > 0) {
+            // Get active equipment from MQTT
+            const activeList = onlineEquipmentCodes.map(code => {
+                // Check if it exists in mock data
+                const mockEntry = mockData.equipment.find(eq => eq.id === code)
+                const mqttData = getEquipmentData(code)
+
+                return {
+                    id: code,
+                    name: mockEntry?.name || `Equipment ${code}`,
+                    categoryId: mockEntry?.categoryId || 'grue-mobile',
+                    portId: mqttData?.port || selectedPort?.id || 'SMA',
+                    status: 'active',  // Active since it's online
+                    craneType: mockEntry?.craneType || 1,
+                    accessory: mockEntry?.accessory || 'benne',
+                    notifications: mockEntry?.notifications || 0,
+                    isOnline: true,
+                    mqttData: mqttData?.latestData
+                }
+            })
+            return activeList
+        }
+
+        // Fallback to selected equipment from mock data (with online status)
+        if (selectedEquipment.length > 0) {
+            return mockData.equipment
+                .filter(eq => selectedEquipment.includes(eq.id))
+                .map(eq => ({
+                    ...eq,
+                    isOnline: isEquipmentOnline(eq.id),
+                    mqttData: getEquipmentData(eq.id)?.latestData
+                }))
+        }
+
+        // Default: show first 4 equipment with online status
+        return mockData.equipment.slice(0, 4).map(eq => ({
+            ...eq,
+            isOnline: isEquipmentOnline(eq.id),
+            mqttData: getEquipmentData(eq.id)?.latestData
+        }))
+    }, [onlineEquipmentCodes, selectedEquipment, selectedPort, isEquipmentOnline, getEquipmentData])
 
     const handleRefresh = () => {
         setIsRefreshing(true)
@@ -75,8 +134,8 @@ const Dashboard = () => {
                                 <button
                                     onClick={() => setGridSize('compact')}
                                     className={`p-2 rounded-md transition-all ${gridSize === 'compact'
-                                            ? 'bg-primary text-white'
-                                            : isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
+                                        ? 'bg-primary text-white'
+                                        : isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
                                         }`}
                                     title="Compact"
                                 >
@@ -85,8 +144,8 @@ const Dashboard = () => {
                                 <button
                                     onClick={() => setGridSize('normal')}
                                     className={`p-2 rounded-md transition-all ${gridSize === 'normal'
-                                            ? 'bg-primary text-white'
-                                            : isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
+                                        ? 'bg-primary text-white'
+                                        : isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
                                         }`}
                                     title="Normal"
                                 >
@@ -95,8 +154,8 @@ const Dashboard = () => {
                                 <button
                                     onClick={() => setGridSize('large')}
                                     className={`p-2 rounded-md transition-all ${gridSize === 'large'
-                                            ? 'bg-primary text-white'
-                                            : isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
+                                        ? 'bg-primary text-white'
+                                        : isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
                                         }`}
                                     title="Large"
                                 >
@@ -108,8 +167,8 @@ const Dashboard = () => {
                             <button
                                 onClick={handleRefresh}
                                 className={`p-2.5 rounded-lg transition-all ${isDarkMode
-                                        ? 'bg-gray-800 text-gray-400 hover:text-white'
-                                        : 'bg-white shadow-sm text-gray-500 hover:text-gray-700'
+                                    ? 'bg-gray-800 text-gray-400 hover:text-white'
+                                    : 'bg-white shadow-sm text-gray-500 hover:text-gray-700'
                                     }`}
                                 title="Rafraîchir"
                             >
@@ -122,8 +181,8 @@ const Dashboard = () => {
                             {/* Settings Button */}
                             <button
                                 className={`p-2.5 rounded-lg transition-all ${isDarkMode
-                                        ? 'bg-gray-800 text-gray-400 hover:text-white'
-                                        : 'bg-white shadow-sm text-gray-500 hover:text-gray-700'
+                                    ? 'bg-gray-800 text-gray-400 hover:text-white'
+                                    : 'bg-white shadow-sm text-gray-500 hover:text-gray-700'
                                     }`}
                                 title="Paramètres"
                             >
@@ -134,15 +193,38 @@ const Dashboard = () => {
                 </div>
 
                 {/* Equipment Grid */}
-                <div className={`grid ${gridClasses[gridSize]} gap-6`}>
-                    {equipmentList.map((equipment) => (
-                        <EquipmentCard
-                            key={equipment.id}
-                            equipmentId={equipment.id}
-                            initialStatus={equipment.status}
-                        />
-                    ))}
-                </div>
+                {equipmentList.length > 0 ? (
+                    <div className={`grid ${gridClasses[gridSize]} gap-6`}>
+                        {equipmentList.map((equipment) => (
+                            <EquipmentCard
+                                key={equipment.id}
+                                equipmentId={equipment.id}
+                                initialStatus={equipment.status}
+                                isOnline={equipment.isOnline}
+                                mqttData={equipment.mqttData}
+                                portId={equipment.portId}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    /* Empty State - No Active Equipment */
+                    <div className={`rounded-2xl p-12 text-center ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-sm'}`}>
+                        <AlertCircle size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`} />
+                        <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                            Aucun équipement actif
+                        </h3>
+                        <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            {mqttConnected
+                                ? 'En attente de données MQTT...'
+                                : 'Connexion au broker MQTT en cours...'}
+                        </p>
+                        {selectedPort && (
+                            <p className={`mt-2 text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                Port sélectionné: <span className="font-semibold">{selectedPort.id}</span>
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 {/* Stats Footer */}
                 <div className={`mt-12 rounded-2xl p-6 transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-sm'
@@ -150,36 +232,66 @@ const Dashboard = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                         <div className="text-center">
                             <div className="text-3xl font-bold text-green-500 mb-1">
-                                {equipmentList.filter(eq => eq.status === 'active').length}
+                                {equipmentList.filter(eq => eq.isOnline).length}
                             </div>
-                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Actifs</div>
+                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>En ligne</div>
                         </div>
                         <div className="text-center">
                             <div className={`text-3xl font-bold mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                {equipmentList.filter(eq => eq.status === 'inactive').length}
+                                {equipmentList.filter(eq => !eq.isOnline).length}
                             </div>
-                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Inactifs</div>
+                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Hors ligne</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-red-500 mb-1">
-                                {equipmentList.filter(eq => eq.status === 'alarm').length}
+                            <div className="text-3xl font-bold text-cyan-500 mb-1">
+                                {discoveredPorts.length}
                             </div>
-                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Alarmes</div>
+                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Ports</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl font-bold text-primary mb-1">
-                                {equipmentList.length}
+                                {onlineEquipmentCodes.length}
                             </div>
-                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total</div>
+                            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total actif</div>
                         </div>
                     </div>
                 </div>
 
                 {/* Connection Info */}
-                <div className={`mt-6 flex items-center justify-center gap-2 text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'
+                <div className={`mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'
                     }`}>
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span>Connecté au broker MQTT • Topic: site/pi5/generator/snapshot</span>
+                    <div className="flex items-center gap-2">
+                        {mqttConnected ? (
+                            <>
+                                <Wifi size={16} className="text-green-500" />
+                                <span className="text-green-500 font-medium">Connecté au broker MQTT</span>
+                            </>
+                        ) : (
+                            <>
+                                <WifiOff size={16} className="text-red-500" />
+                                <span className="text-red-500 font-medium">Déconnecté du broker MQTT</span>
+                            </>
+                        )}
+                    </div>
+                    {mqttConnected && (discoveredPorts.length > 0 || onlineEquipmentCodes.length > 0) && (
+                        <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-opacity-20 backdrop-blur-sm"
+                            style={{ backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)' }}>
+                            <Radio size={14} className="text-amber-500 animate-pulse" />
+                            {discoveredPorts.length > 0 && (
+                                <span>
+                                    Ports: <span className="font-semibold text-amber-500">{discoveredPorts.join(', ')}</span>
+                                </span>
+                            )}
+                            {onlineEquipmentCodes.length > 0 && (
+                                <span>
+                                    | Équipements: <span className="font-semibold text-cyan-500">{onlineEquipmentCodes.slice(0, 3).join(', ')}{onlineEquipmentCodes.length > 3 ? ` +${onlineEquipmentCodes.length - 3}` : ''}</span>
+                                </span>
+                            )}
+                        </div>
+                    )}
+                    <span className={isDarkMode ? 'text-gray-600' : 'text-gray-400'}>
+                        Topic: {selectedPort?.id || '+'}/{onlineEquipmentCodes[0] || '+'}
+                    </span>
                 </div>
             </div>
         </div>

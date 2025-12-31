@@ -1,4 +1,4 @@
-// Notification tag definitions - same as Angular inspiration
+// Notification tag definitions - synced from inspiration/notifications.component.ts
 // Each tag maps to an MQTT boolean signal
 
 export const NOTIFICATION_TAGS = [
@@ -20,6 +20,8 @@ export const NOTIFICATION_TAGS = [
     { tagName: 'Fahrwerk_Not_Halt_vorne_links', message: 'AU Translation : Avant Gauche', type: 'Critical', category: 'Emergency' },
     { tagName: 'Fahrwerk_Not_Halt_hinten_rechts', message: 'AU Translation : Arrière Droite', type: 'Critical', category: 'Emergency' },
     { tagName: 'Fahrwerk_Not_Halt_hinten_links', message: 'AU Translation : Arrière Gauche', type: 'Critical', category: 'Emergency' },
+    { tagName: 'Fahrwerk_Not_Halt_Mitte_rechts', message: 'AU Translation : Milieu Droite', type: 'Critical', category: 'Emergency' },
+    { tagName: 'Fahrwerk_Not_Halt_Mitte_links', message: 'AU Translation : Milieu Gauche', type: 'Critical', category: 'Emergency' },
     { tagName: 'OPT_Fahrwerk_Notendschalter_vorne', message: 'Fin de course urgence : Translation Avant', type: 'Warning', category: 'Emergency' },
     { tagName: 'OPT_Fahrwerk_Notendschalter_hinten', message: 'Fin de course urgence : Translation Arrière', type: 'Alarm', category: 'Emergency' },
 
@@ -27,17 +29,25 @@ export const NOTIFICATION_TAGS = [
     { tagName: 'HW1_B_w_Sicherheits_SPS_Limit_Verschleigrenz', message: "Critique : Limite d'usure frein levage 1 atteinte", type: 'Critical', category: 'Safety System' },
     { tagName: 'HW1_B_w_Sicherheits_SPS_Warnung_Verschleigr', message: 'Avertissement : Usure frein levage 1', type: 'Warning', category: 'Safety System' },
     { tagName: 'HW1_B_w_Sicherheits_SPS_Sersorstwert_bei_Br', message: 'Défaut Capteur : Frein levage 1 reste ouvert', type: 'Fault', category: 'Safety System' },
+    { tagName: 'HW1_B_w_Sicherheits_SPS_Diskrepanzfehler_Ser', message: 'Erreur incohérence capteurs (Levage 1)', type: 'Fault', category: 'Safety System' },
     { tagName: 'Hubwerk1_Bremsschutz', message: 'Protection frein levage 1 déclenchée', type: 'Warning', category: 'Safety System' },
     { tagName: 'Drehwerk_Bremsschutz', message: 'Protection frein orientation déclenchée', type: 'Alarm', category: 'Safety System' },
     { tagName: 'OPT_Fahrwerk_Hinderniserkennung_vorne_rechts', message: 'Obstacle détecté : Avant Droite', type: 'Warning', category: 'Safety System' },
     { tagName: 'OPT_Fahrwerk_Hinderniserkennung_vorne_links', message: 'Obstacle détecté : Avant Gauche', type: 'Warning', category: 'Safety System' },
+    { tagName: 'OPT_Fahrwerk_Hinderniserkennung_hinten_rechts', message: 'Obstacle détecté : Arrière Droite', type: 'Warning', category: 'Safety System' },
+    { tagName: 'OPT_Fahrwerk_Hinderniserkennung_hinten_links', message: 'Obstacle détecté : Arrière Gauche', type: 'Warning', category: 'Safety System' },
 
     // Electrical
     { tagName: 'VAR_Fremdeinspeisung_Temperaturuberwachung', message: 'Arrêt : Surchauffe transformateur externe', type: 'Critical', category: 'Electrical' },
     { tagName: 'Absicherung_Spreader', message: 'Défaut fusible : Spreader', type: 'Fault', category: 'Electrical' },
     { tagName: 'FI_Schutzschalter_Spreader', message: 'Disjoncteur différentiel Spreader déclenché', type: 'Fault', category: 'Electrical' },
     { tagName: 'Absicherung_Monitor_Turmkabine', message: 'Défaut alim. : Moniteur cabine', type: 'Fault', category: 'Electrical' },
+    { tagName: 'Absicherung_Leistungsmessumformer', message: 'Défaut protection : Convertisseur de puissance', type: 'Fault', category: 'Electrical' },
     { tagName: 'Hauptsicherung_Arbeitsplatzbeleuchtung_Portal', message: 'Fusible éclairage portique grillé', type: 'Warning', category: 'Electrical' },
+    { tagName: 'Absicherung_Beleuchtung_Unterwagen_HSK', message: 'Défaut Fusible : Eclairage Chassis', type: 'Fault', category: 'Electrical' },
+    { tagName: 'Kranhauptnetz_Spannung_vorhanden', message: 'Tension Secteur Principale Présente', type: 'Info', category: 'Electrical' },
+    { tagName: 'Fahrleitungstrommel_leer', message: 'Attention : Enrouleur câble VIDE', type: 'Warning', category: 'Electrical' },
+    { tagName: 'Fahrleitungstrommel_voll', message: 'Info : Enrouleur câble PLEIN', type: 'Info', category: 'Electrical' },
 
     // Status (Info)
     { tagName: 'Kranhauptschalter_ist_EIN', message: 'Grue sous tension (ON)', type: 'Info', category: 'Status' },
@@ -46,17 +56,22 @@ export const NOTIFICATION_TAGS = [
     { tagName: 'Sturmbolzen_links_verriegelt', message: 'Verrouillage tempête engagé (Gauche)', type: 'Info', category: 'Status' },
     { tagName: 'Ruckmeldung_Container_verriegelt', message: 'Container Verrouillé', type: 'Info', category: 'Status' },
 
-    // System
+    // System & Communication
     { tagName: 'Abschaltung_Programm_durch_DP_Bus_Fehler', message: 'Arrêt Programme : Erreur Bus Profibus (DP)', type: 'Critical', category: 'System' },
     { tagName: 'Abschaltung_Programm_durch_ASI_Bus_Fehler', message: 'Arrêt Programme : Erreur Bus ASI', type: 'Critical', category: 'System' },
 
-    // Spreader
+    // Spreader & Twistlocks
     { tagName: 'Ruckmeldung_Container_entriegelt', message: 'Container Déverrouillé', type: 'Info', category: 'Spreader' },
     { tagName: 'Ruckmeldung_Spreader_aufgesetzt', message: 'Spreader posé sur container (Landed)', type: 'Info', category: 'Spreader' },
     { tagName: 'Ruckmeldung_Spreader_in_Mittelstellung', message: 'Spreader centré (Mittelstellung)', type: 'Info', category: 'Spreader' },
+    { tagName: 'Ruckmeldung_1_Spreader_gesteckt', message: 'Câble Spreader Connecté', type: 'Info', category: 'Spreader' },
     { tagName: 'RCLD_Ruckmeldung_Twistlocks_verriegelt', message: 'Twistlocks Verrouillés (Feedback RCLD)', type: 'Info', category: 'Spreader' },
+    { tagName: 'VAR_Ruckmeldung_2_Twinlift_Spreader_gesteckt', message: 'Spreader Twinlift connecté', type: 'Info', category: 'Spreader' },
     { tagName: 'Twistlocks_verriegeln', message: 'Commande verrouiller Twistlocks', type: 'Info', category: 'Spreader' },
     { tagName: 'Twistlocks_entriegeln', message: 'Commande déverrouiller Twistlocks', type: 'Info', category: 'Spreader' },
+    { tagName: 'Spreaderverstellung_auf_20', message: 'Réglage spreader 20 pieds', type: 'Info', category: 'Spreader' },
+    { tagName: 'Spreaderverstellung_auf_40', message: 'Réglage spreader 40 pieds', type: 'Info', category: 'Spreader' },
+    { tagName: 'Motorgreiferbetrieb', message: 'Mode grappin motorisé', type: 'Info', category: 'Spreader' },
 
     // Hoist
     { tagName: 'Hubwerk1_Schnelle_Getriebestufe_aktiv', message: 'Levage 1 : Vitesse rapide active', type: 'Info', category: 'Hoist' },
@@ -64,6 +79,8 @@ export const NOTIFICATION_TAGS = [
     { tagName: 'Hubwerk1_Langsame_Getriebestufe_aktiv', message: 'Levage 1 : Vitesse lente active', type: 'Info', category: 'Hoist' },
     { tagName: 'Hubwerk1_Freigabe_Fahrkommando_Heben', message: 'Levage 1 : Autorisation commande monter', type: 'Info', category: 'Hoist' },
     { tagName: 'Hubwerk1_Freigabe_Fahrkommando_Senken', message: 'Levage 1 : Autorisation commande descendre', type: 'Info', category: 'Hoist' },
+    { tagName: 'Hubwerk2_Freigabe_Fahrkommando_Heben', message: 'Levage 2 : Autorisation commande monter', type: 'Info', category: 'Hoist' },
+    { tagName: 'Hubwerk2_Freigabe_Fahrkommando_Senken', message: 'Levage 2 : Autorisation commande descendre', type: 'Info', category: 'Hoist' },
     { tagName: 'Hubwerk1_Fehler_Getriebeumschaltung', message: 'Erreur changement de vitesse Levage 1', type: 'Fault', category: 'Hoist' },
     { tagName: 'Hubwerk2_Absicherung_Spannungsversorgung', message: 'Levage 2 : Protection alimentation', type: 'Fault', category: 'Hoist' },
 
@@ -93,12 +110,8 @@ export const NOTIFICATION_TAGS = [
     { tagName: 'Kran_abgestutzt', message: 'Grue entièrement calée (Stabilisateurs OK)', type: 'Info', category: 'Chassis' },
     { tagName: 'Oberwagen_und_Unterwagen_verriegelt', message: 'Chassis et Tourelle Verrouillés', type: 'Info', category: 'Chassis' },
     { tagName: 'Sturmbolzen_entriegelt', message: 'Verrous tempête déverrouillés (Prêt à rouler)', type: 'Info', category: 'Chassis' },
-
-    // Cable Reel
-    { tagName: 'Fahrleitungstrommel_leer', message: 'Attention : Enrouleur câble VIDE', type: 'Warning', category: 'Cable Reel' },
-    { tagName: 'Fahrleitungstrommel_voll', message: 'Info : Enrouleur câble PLEIN', type: 'Info', category: 'Cable Reel' },
-    { tagName: 'Motorleitungstrommel_Endschalter_Abwickeln', message: 'Enrouleur moteur : Fin course dérouler', type: 'Warning', category: 'Cable Reel' },
-    { tagName: 'Motorleitungstrommel_Endschalter_Aufwickeln', message: 'Enrouleur moteur : Fin course enrouler', type: 'Warning', category: 'Cable Reel' },
+    { tagName: 'Fahrwerk_Schienenbremse_rechts_geoffnet', message: 'Frein sur rail droit : OUVERT', type: 'Info', category: 'Chassis' },
+    { tagName: 'Fahrwerk_Schienenbremse_links_geoffnet', message: 'Frein sur rail gauche : OUVERT', type: 'Info', category: 'Chassis' },
 
     // Remote Control
     { tagName: 'FFB_Not_Aus_Taste_nicht_betatigt', message: 'Arrêt Urgence Radio : OK (Non actionné)', type: 'Info', category: 'Remote Control' },
@@ -111,12 +124,22 @@ export const NOTIFICATION_TAGS = [
     { tagName: 'Abstutztrager_vorne_rechts_blau_abgetutzt', message: 'Porteur AV droit (bleu) calé', type: 'Info', category: 'Outriggers' },
     { tagName: 'Abstutztrager_hinten_rechts_gelb_abgestutzt', message: 'Porteur AR droit (jaune) calé', type: 'Info', category: 'Outriggers' },
     { tagName: 'Abstutztrager_hinten_links_grun_abgestutzt', message: 'Porteur AR gauche (vert) calé', type: 'Info', category: 'Outriggers' },
+
+    // Cable Reel
+    { tagName: 'Motorleitungstrommel_Endschalter_Abwickeln', message: 'Enrouleur moteur : Fin course dérouler', type: 'Warning', category: 'Cable Reel' },
+    { tagName: 'Motorleitungstrommel_Endschalter_Aufwickeln', message: 'Enrouleur moteur : Fin course enrouler', type: 'Warning', category: 'Cable Reel' },
+
+    // System
+    { tagName: 'Netzbetrieb', message: 'Mode secteur', type: 'Info', category: 'System' },
+    { tagName: 'Generatorbetrieb', message: 'Mode générateur', type: 'Info', category: 'System' },
+    { tagName: 'Stillstand_aller_Antriebe', message: "Tous entraînements à l'arrêt", type: 'Info', category: 'System' },
+    { tagName: 'Wartungsbetrieb_angewahlt', message: 'Mode maintenance sélectionné', type: 'Info', category: 'System' },
 ];
 
 // Get unique categories
 export const NOTIFICATION_CATEGORIES = [...new Set(NOTIFICATION_TAGS.map(t => t.category))];
 
-// Type colors
+// Type colors for UI
 export const TYPE_COLORS = {
     Critical: { bg: 'bg-red-500', text: 'text-white', border: 'border-red-500', bgLight: 'bg-red-500/20' },
     Alarm: { bg: 'bg-amber-500', text: 'text-black', border: 'border-amber-500', bgLight: 'bg-amber-500/20' },
@@ -125,11 +148,8 @@ export const TYPE_COLORS = {
     Info: { bg: 'bg-cyan-500', text: 'text-white', border: 'border-cyan-500', bgLight: 'bg-cyan-500/20' },
 };
 
-// Type icons (using lucide-react names)
-export const TYPE_ICONS = {
-    Critical: 'AlertOctagon',
-    Alarm: 'Bell',
-    Warning: 'AlertTriangle',
-    Fault: 'XCircle',
-    Info: 'Info',
-};
+// Build a lookup map for quick access: tagName -> tagDefinition
+export const NOTIFICATION_TAG_MAP = NOTIFICATION_TAGS.reduce((acc, tag) => {
+    acc[tag.tagName] = tag;
+    return acc;
+}, {});

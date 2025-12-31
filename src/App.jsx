@@ -10,6 +10,8 @@ import TelemetryDashboard from './pages/TelemetryDashboard'
 import Notifications from './pages/Notifications'
 import { useStore } from './store/store'
 
+import ThemeToggle from './components/ThemeToggle'
+
 function App() {
     const isDarkMode = useStore((state) => state.isDarkMode)
     const location = useLocation()
@@ -41,6 +43,7 @@ function App() {
                     <Route path="/notifications" element={<Notifications />} />
                 </Routes>
             </main>
+            <ThemeToggle />
         </div>
     )
 }

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useStore, mockData } from '../store/store'
+import { useGlobalMqtt } from '../hooks/useGlobalMqtt'
 import {
     ChevronLeft,
     Check,
@@ -11,7 +12,10 @@ import {
     Layers,
     Cog,
     ArrowRight,
-    Info
+    Info,
+    Radio,
+    Wifi,
+    WifiOff
 } from 'lucide-react'
 
 const categoryIcons = {
@@ -33,6 +37,16 @@ const EquipmentSelection = () => {
         toggleEquipment,
         isDarkMode
     } = useStore()
+
+    // Global MQTT hook for real-time selection updates
+    const {
+        isConnected: mqttConnected,
+        detectedSite,
+        detectedHost,
+        detectedTerminal,
+        detectedType,
+        lastMessage
+    } = useGlobalMqtt({ enabled: true })
 
     const terminals = mockData.terminals
 
@@ -71,19 +85,62 @@ const EquipmentSelection = () => {
                         Retour aux ports
                     </button>
 
-                    <div className="flex items-center gap-3 mb-2">
-                        <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                            Sélection des <span className="text-primary">Équipements</span>
-                        </h1>
-                        {selectedPort && (
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${isDarkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-50 text-primary'
-                                }`}>
-                                {selectedPort.name}
-                            </span>
-                        )}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
+                        <div className="flex items-center gap-3">
+                            <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                                Sélection des <span className="text-primary">Équipements</span>
+                            </h1>
+                            {selectedPort && (
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${isDarkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-50 text-primary'
+                                    }`}>
+                                    {selectedPort.name}
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Real-time MQTT Status Indicator */}
+                        <div className={`flex flex-wrap items-center gap-3 px-4 py-2 rounded-xl transition-all ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-sm'
+                            }`}>
+                            <div className="flex items-center gap-2">
+                                {mqttConnected ? (
+                                    <Wifi size={16} className="text-green-500" />
+                                ) : (
+                                    <WifiOff size={16} className="text-red-500" />
+                                )}
+                                <span className={`text-xs font-medium ${mqttConnected ? 'text-green-500' : 'text-red-500'}`}>
+                                    {mqttConnected ? 'MQTT Connecté' : 'Déconnecté'}
+                                </span>
+                            </div>
+                            {mqttConnected && (detectedSite || detectedTerminal || detectedType || detectedHost) && (
+                                <div className="flex flex-wrap items-center gap-2 pl-3 border-l border-gray-600">
+                                    <Radio size={14} className="text-amber-500 animate-pulse" />
+                                    {detectedSite && (
+                                        <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            Site: <span className="font-semibold text-amber-500">{detectedSite.toUpperCase()}</span>
+                                        </span>
+                                    )}
+                                    {detectedTerminal && (
+                                        <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            | Terminal: <span className="font-semibold text-cyan-500">{detectedTerminal}</span>
+                                        </span>
+                                    )}
+                                    {detectedType && (
+                                        <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            | Type: <span className="font-semibold text-purple-500">{detectedType}</span>
+                                        </span>
+                                    )}
+                                    {detectedHost && (
+                                        <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            | Host: <span className="font-semibold text-primary">{detectedHost}</span>
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
                         Sélectionnez le terminal, la catégorie, puis les équipements à superviser
+                        {mqttConnected && <span className="text-green-500 ml-2">• Sélection automatique activée</span>}
                     </p>
                 </div>
 
@@ -109,10 +166,10 @@ const EquipmentSelection = () => {
                                     key={terminal.id}
                                     onClick={() => setSelectedTerminal(terminal)}
                                     className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-200 ${selectedTerminal?.id === terminal.id
-                                            ? 'bg-primary text-white shadow-md'
-                                            : isDarkMode
-                                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                                                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                        ? 'bg-primary text-white shadow-md'
+                                        : isDarkMode
+                                            ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                         }`}
                                 >
                                     <span className="font-medium">{terminal.name}</span>
@@ -148,10 +205,10 @@ const EquipmentSelection = () => {
                                         key={category.id}
                                         onClick={() => setSelectedCategory(category)}
                                         className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-200 ${selectedCategory?.id === category.id
-                                                ? 'bg-primary text-white shadow-md'
-                                                : isDarkMode
-                                                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                            ? 'bg-primary text-white shadow-md'
+                                            : isDarkMode
+                                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
@@ -192,10 +249,10 @@ const EquipmentSelection = () => {
                                             key={equipment.id}
                                             onClick={() => toggleEquipment(equipment.id)}
                                             className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-200 ${isSelected
-                                                    ? 'bg-primary text-white shadow-md'
-                                                    : isDarkMode
-                                                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                                                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                                ? 'bg-primary text-white shadow-md'
+                                                : isDarkMode
+                                                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
@@ -263,10 +320,10 @@ const EquipmentSelection = () => {
                         onClick={handleProceed}
                         disabled={selectedEquipment.length === 0}
                         className={`flex items-center gap-3 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${selectedEquipment.length > 0
-                                ? 'bg-primary hover:bg-primary-600 text-white shadow-lg shadow-primary/30 cursor-pointer'
-                                : isDarkMode
-                                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            ? 'bg-primary hover:bg-primary-600 text-white shadow-lg shadow-primary/30 cursor-pointer'
+                            : isDarkMode
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
                     >
                         Procéder à la visualisation

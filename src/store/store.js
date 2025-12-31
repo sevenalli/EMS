@@ -88,6 +88,17 @@ export const mockData = {
     // Equipment with crane type, accessory, status, and notifications
     equipment: [
         {
+            id: 'MM1GM11701',
+            name: 'Grue Mobile MM1GM11701',
+            categoryId: 'grue-mobile',
+            terminalId: 'terminal-1',
+            portId: 'SMA',
+            status: 'active',
+            craneType: 1,
+            accessory: 'spreader',
+            notifications: 0
+        },
+        {
             id: 'G380003',
             name: 'Grue G380003',
             categoryId: 'grue-mobile',

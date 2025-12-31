@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useStore, mockData } from '../store/store'
 import { useMqtt } from '../hooks/useMqtt'
+import { useTopicDiscovery } from '../hooks/useTopicDiscovery'
 import { useHistory } from '../hooks/useHistory'
 import {
     ChevronLeft,
@@ -128,8 +129,25 @@ const EquipmentMonitoring = () => {
         return data
     }, [])
 
-    // MQTT for live mode
-    const { telemetry: liveTelemetry, isConnected } = useMqtt(equipmentId, { useMock: !isHistoryMode })
+    // Get equipment port from mock data
+    const equipmentData = mockData.equipment.find(eq => eq.id === equipmentId)
+    const portId = equipmentData?.portId || 'SMA'  // Default to SMA if not found
+
+    // Dynamic topic based on port/equipmentId format
+    const dynamicTopic = `${portId}/${equipmentId}`
+
+    // MQTT for live mode - enforce Real Data (useMock: false) with dynamic topic
+    const { telemetry: mqttTelemetry, isConnected } = useMqtt(equipmentId, {
+        useMock: false,
+        topic: dynamicTopic
+    })
+
+    // Use topic discovery to get fallback data (already discovered)
+    const { getEquipmentData, isEquipmentOnline } = useTopicDiscovery()
+    const discoveredData = getEquipmentData(equipmentId)
+
+    // Use MQTT data if available, otherwise fall back to discovered data
+    const liveTelemetry = mqttTelemetry || discoveredData?.latestData || null
 
     // History hook
     const {
@@ -152,44 +170,112 @@ const EquipmentMonitoring = () => {
         'Motorgreiferbetrieb'
     ]
 
-    // Apply history frame data to crane visualization
-    const updateCraneFromHistory = useCallback((frameData) => {
-        if (!frameData) return
+    // Unified function to update crane state from telemetry (Live or History)
+    const updateCraneFromTelemetry = useCallback((data) => {
+        if (!data) return
 
-        // Rotation (Slewing)
-        if (frameData.Angle_d_orientation_superstructure_chassis_valeur_reelle !== undefined) {
-            const angle = -Number(frameData.Angle_d_orientation_superstructure_chassis_valeur_reelle)
-            // Convert angle to 0-180 range for display
-            const normalizedAngle = ((angle % 360) + 360) % 360
+        // 1. Rotation (Slewing)
+        // Check for 'friendly' key (live) or raw key (history/sim)
+        let angle = undefined
+        if (data.angleOrientation !== undefined) angle = Number(data.angleOrientation)
+        else if (data.Angle_d_orientation_superstructure_chassis_valeur_reelle !== undefined) angle = Number(data.Angle_d_orientation_superstructure_chassis_valeur_reelle)
+
+        if (angle !== undefined) {
+            // Convert angle to 0-180 range for display (assuming raw is -180 to 0 or similar)
+            // Implementation matches previous logic: invert and normalize
+            const normalizedAngle = ((-angle % 360) + 360) % 360
             setRotationValue(Math.min(180, Math.max(0, normalizedAngle)))
         }
 
-        // Luffing (Boom Radius) - 11m to 51m range
-        if (frameData.Portee_en_metres_codeur_absolu !== undefined) {
-            const radius = Number(frameData.Portee_en_metres_codeur_absolu)
+        // 2. Luffing (Boom Radius)
+        let radius = undefined
+        if (data.porteeCodeurAbsolu !== undefined) radius = Number(data.porteeCodeurAbsolu)
+        else if (data.Portee_en_metres_codeur_absolu !== undefined) radius = Number(data.Portee_en_metres_codeur_absolu)
+
+        if (radius !== undefined) {
             const clampedRadius = Math.max(11, Math.min(51, radius))
             const luffingPercent = ((clampedRadius - 11) / (51 - 11)) * 100
             setLuffingValue(luffingPercent)
         }
 
-        // Hoisting (Hook Height) - 0 to 47m range
-        if (frameData.Valeur_reelle_de_la_hauteur_de_levage_en_m_codeur_absolu !== undefined) {
-            const height = Number(frameData.Valeur_reelle_de_la_hauteur_de_levage_en_m_codeur_absolu)
+        // 3. Hoisting (Hook Height)
+        let height = undefined
+        if (data.hauteurLevage !== undefined) height = Number(data.hauteurLevage)
+        else if (data.Valeur_reelle_de_la_hauteur_de_levage_en_m_codeur_absolu !== undefined) height = Number(data.Valeur_reelle_de_la_hauteur_de_levage_en_m_codeur_absolu)
+
+        if (height !== undefined) {
             const clampedHeight = Math.max(0, Math.min(47, height))
             // Invert: 0m = 100% rope out, 47m = 0% rope out
             const hoistPercent = ((47 - clampedHeight) / 47) * 100
             setHoistValue(hoistPercent)
         }
 
-        // Load Status
-        if (frameData.Charge_nette_en_tonnes !== undefined) {
-            setIsLoaded(Number(frameData.Charge_nette_en_tonnes) > 0.5)
+        // 4. Scenario Detection (Dynamic)
+        const isSpreader = data.spreaderConnected || data.Ruckmeldung_1_Spreader_gesteckt
+        const isTwinlift = data.twinliftConnected || data.VAR_Ruckmeldung_2_Twinlift_Spreader_gesteckt
+
+        const isGrab = data.motorGrabActive || data.Motorgreiferbetrieb ||
+            data.grabCmdClose || data.TK_Steuerhebel_Motorgreifer_Hubwerk2_Schlieen ||
+            data.grabCmdOpen || data.TK_Steuerhebel_Motorgreifer_Hubwerk2_Offnen
+
+        if (isSpreader || isTwinlift) {
+            setScenario('container')
+        } else {
+            // Default to 'bulk' (Grab) if no Spreader/Twinlift explicitly detected
+            // This matches user observation where 'Grab' is the physical reality when no spreader tags are active.
+            // If we want to be stricter, we could check isGrab, but fallback seems safer given the telemetry dump.
+            setScenario('bulk')
         }
-    }, [])
+
+        // 5. Load Status
+        // Logic depends on scenario
+        let loaded = false
+        if (scenario === 'container') {
+            loaded = Boolean(data.containerVerrouille || data.Ruckmeldung_Container_verriegelt)
+        } else {
+            // Bulk mode: check weight > 0.5t
+            let weight = 0
+            if (data.chargeNette !== undefined) weight = Number(data.chargeNette)
+            else if (data.Charge_nette_en_tonnes !== undefined) weight = Number(data.Charge_nette_en_tonnes)
+            loaded = weight > 0.5
+        }
+        setIsLoaded(loaded)
+
+    }, [scenario]) // Re-run if scenario changes to update load logic correctness
 
     // Get equipment details
     const equipment = mockData.equipment.find(eq => eq.id === equipmentId) || {}
-    const { craneType = 1, accessory = 'benne', notifications = 0, status = 'off' } = equipment
+    const { craneType = 1, accessory: defaultAccessory = 'benne', notifications = 0, status: defaultStatus = 'off' } = equipment
+
+    // Derive real-time status from telemetry
+    const getLiveStatus = useCallback(() => {
+        if (!liveTelemetry) return defaultStatus
+
+        // Check if diesel engine is running (crane is active)
+        const dieselRunning = liveTelemetry.dieselEnMarche || liveTelemetry.Uberwachung_Signal_Dieselmotor_in_Betrieb
+        // Check if main switch is on
+        const mainSwitchOn = liveTelemetry.kranHauptschalter || liveTelemetry.Kranhauptschalter_ist_EIN
+
+        if (dieselRunning) return 'affected'
+        if (mainSwitchOn) return 'standby'
+        return 'off'
+    }, [liveTelemetry, defaultStatus])
+
+    // Derive real-time accessory from telemetry
+    const getLiveAccessory = useCallback(() => {
+        if (!liveTelemetry) return defaultAccessory
+
+        // Check twinlift first (higher priority)
+        if (liveTelemetry.twinliftConnected || liveTelemetry.VAR_Ruckmeldung_2_Twinlift_Spreader_gesteckt) return 'twinlift'
+        // Then check spreader
+        if (liveTelemetry.spreaderConnected || liveTelemetry.Ruckmeldung_1_Spreader_gesteckt) return 'spreader'
+        // Default to benne (motor grab)
+        return 'benne'
+    }, [liveTelemetry, defaultAccessory])
+
+    // Use live values in live mode, fallback to mock for history/simulation
+    const status = currentMode === 'live' ? getLiveStatus() : defaultStatus
+    const accessory = currentMode === 'live' ? getLiveAccessory() : defaultAccessory
 
     // Crane control states
     const [rotationValue, setRotationValue] = useState(45)
@@ -231,21 +317,21 @@ const EquipmentMonitoring = () => {
             setIsPlaying(false)
             // Apply first frame immediately
             if (data.length > 0) {
-                updateCraneFromHistory(data[0].data)
+                updateCraneFromTelemetry(data[0].data)
                 setCurrentPlaybackTime(data[0].timestamp)
             }
         }
-    }, [isSimulationMode, generateSimulationData, updateCraneFromHistory])
+    }, [isSimulationMode, generateSimulationData, updateCraneFromTelemetry]) // Changed dependency
 
     // Apply first frame when history data loads
     useEffect(() => {
         if (isHistoryMode && historyData?.length > 0 && playbackIndex === 0) {
             const firstFrame = historyData[0]?.data || {}
             console.log('[EquipmentMonitoring] Applying first frame:', Object.keys(firstFrame))
-            updateCraneFromHistory(firstFrame)
+            updateCraneFromTelemetry(firstFrame)
             setCurrentPlaybackTime(historyData[0]?.timestamp)
         }
-    }, [isHistoryMode, historyData, playbackIndex, updateCraneFromHistory])
+    }, [isHistoryMode, historyData, playbackIndex, updateCraneFromTelemetry]) // Changed dependency
 
     // Playback timer (works for both history and simulation)
     useEffect(() => {
@@ -263,7 +349,7 @@ const EquipmentMonitoring = () => {
                         const frameData = playbackData[next].data || {}
                         setCurrentTelemetry(frameData)
                         setCurrentPlaybackTime(playbackData[next].timestamp)
-                        updateCraneFromHistory(frameData)
+                        updateCraneFromTelemetry(frameData)
                     }
                     return next
                 })
@@ -272,15 +358,15 @@ const EquipmentMonitoring = () => {
         return () => {
             if (playbackRef.current) clearInterval(playbackRef.current)
         }
-    }, [isHistoryMode, isSimulationMode, isPlaying, playbackData, playbackSpeed, updateCraneFromHistory])
+    }, [isHistoryMode, isSimulationMode, isPlaying, playbackData, playbackSpeed, updateCraneFromTelemetry]) // Changed dependency
 
     // Sync telemetry from live mode only
     useEffect(() => {
         if (currentMode === 'live' && liveTelemetry) {
             setCurrentTelemetry(liveTelemetry)
-            setIsLoaded(liveTelemetry.loadWeight > 0.5)
+            updateCraneFromTelemetry(liveTelemetry)
         }
-    }, [currentMode, liveTelemetry])
+    }, [currentMode, liveTelemetry, updateCraneFromTelemetry])
 
     // Animate towards target values
     useEffect(() => {
@@ -312,7 +398,7 @@ const EquipmentMonitoring = () => {
             const frameData = playbackData[newIndex].data || {}
             setCurrentTelemetry(frameData)
             setCurrentPlaybackTime(playbackData[newIndex].timestamp)
-            updateCraneFromHistory(frameData)
+            updateCraneFromTelemetry(frameData)
         }
     }
     const skipForward = () => {
@@ -323,7 +409,7 @@ const EquipmentMonitoring = () => {
             const frameData = playbackData[newIndex].data || {}
             setCurrentTelemetry(frameData)
             setCurrentPlaybackTime(playbackData[newIndex].timestamp)
-            updateCraneFromHistory(frameData)
+            updateCraneFromTelemetry(frameData)
         }
     }
 
@@ -845,6 +931,7 @@ const EquipmentMonitoring = () => {
                                                     />
 
                                                     {/* ACCESSORY - Switch based on scenario & load status */}
+                                                    {/* ACCESSORY - Switch based on scenario & load status */}
                                                     <img
                                                         src={
                                                             scenario === 'container'
@@ -1039,13 +1126,6 @@ const EquipmentMonitoring = () => {
                             >
                                 Full Dashboard
                             </button>
-                            <span
-                                onClick={() => setIsTelemetryExpanded(!isTelemetryExpanded)}
-                                className="text-xs text-gray-400 flex items-center gap-1 cursor-pointer hover:text-gray-300"
-                            >
-                                {isTelemetryExpanded ? 'Collapse' : 'Expand'}
-                                <ChevronRight size={14} className={`transition-transform ${isTelemetryExpanded ? 'rotate-90' : ''}`} />
-                            </span>
                         </h3>
                     </div>
 

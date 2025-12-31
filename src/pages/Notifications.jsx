@@ -1,11 +1,22 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     Bell, AlertOctagon, AlertTriangle, XCircle, Info,
     ChevronLeft, Search, Filter, Zap, Mail, CheckCheck, Trash2,
-    RefreshCw
+    RefreshCw, Wifi
 } from 'lucide-react';
-import { NOTIFICATION_TAGS, NOTIFICATION_CATEGORIES, TYPE_COLORS } from '../data/notificationTags';
+import { NOTIFICATION_TAGS, NOTIFICATION_CATEGORIES, TYPE_COLORS, NOTIFICATION_TAG_MAP } from '../data/notificationTags';
+import { useMqtt } from '../hooks/useMqtt';
+import { useTopicDiscovery } from '../hooks/useTopicDiscovery';
+import { useStore, mockData } from '../store/store';
+
+// Generate unique ID
+const generateId = () => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
 
 // Notification type icons
 const TypeIcon = ({ type, size = 20 }) => {
@@ -22,7 +33,15 @@ const TypeIcon = ({ type, size = 20 }) => {
 
 function Notifications() {
     const navigate = useNavigate();
-    const isDarkMode = true;
+    const { equipmentId } = useParams(); // Optional equipment filter
+    const isDarkMode = useStore((state) => state.isDarkMode);
+
+    // Get equipment port from mock data (if specific equipment)
+    const equipmentData = equipmentId ? mockData.equipment.find(eq => eq.id === equipmentId) : null;
+    const portId = equipmentData?.portId || 'SMA';
+
+    // Dynamic topic: specific equipment or wildcard for all
+    const dynamicTopic = equipmentId ? `${portId}/${equipmentId}` : '+/+';
 
     // State
     const [notifications, setNotifications] = useState([]);
@@ -31,7 +50,21 @@ function Notifications() {
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [searchText, setSearchText] = useState('');
     const [showActiveOnly, setShowActiveOnly] = useState(false);
-    const [isSimulating, setIsSimulating] = useState(true);
+
+    // Track previous tag states for edge detection
+    const previousStatesRef = useRef(new Map());
+
+    // Use topic discovery for wildcard subscription to all equipment
+    const { isConnected, activeEquipment, onlineEquipmentCodes } = useTopicDiscovery({
+        portFilter: equipmentId ? portId : null  // Filter by port if specific equipment
+    });
+
+    // Also use specific MQTT for single equipment if provided
+    const { rawData } = useMqtt(equipmentId || 'notifications', {
+        useMock: false,
+        brokerUrl: 'ws://localhost:9001',
+        topic: dynamicTopic
+    });
 
     // Stats
     const getCriticalCount = () => notifications.filter(n => n.type === 'Critical' && n.isActive).length;
@@ -66,58 +99,63 @@ function Notifications() {
         applyFilters();
     }, [applyFilters]);
 
-    // Simulated MQTT - for testing only
+    // Process live MQTT rawData for notifications
     useEffect(() => {
-        if (!isSimulating) return;
+        if (!rawData) return;
 
-        let notifId = 0;
+        const previousStates = previousStatesRef.current;
 
-        // Add initial notifications
-        const initialNotifs = NOTIFICATION_TAGS.slice(0, 5).map((tag, idx) => ({
-            id: ++notifId,
-            tagName: tag.tagName,
-            message: tag.message,
-            type: tag.type,
-            category: tag.category,
-            timestamp: new Date(Date.now() - idx * 60000),
-            isRead: idx > 1,
-            isActive: idx < 3
-        }));
-        setNotifications(initialNotifs);
+        // Check each notification tag against incoming raw telemetry data
+        for (const tag of NOTIFICATION_TAGS) {
+            // The rawData has the original MQTT keys (e.g. Dieselmotor_Not_Aus)
+            const currentValue = rawData[tag.tagName];
 
-        // Simulate random notifications
-        const interval = setInterval(() => {
-            const randomTag = NOTIFICATION_TAGS[Math.floor(Math.random() * NOTIFICATION_TAGS.length)];
-            const isActive = Math.random() > 0.3;
+            if (currentValue !== undefined) {
+                const isActive = Boolean(currentValue);
+                const wasActive = previousStates.get(tag.tagName) || false;
 
-            setNotifications(prev => {
-                // Check if tag already exists and is active
-                const existing = prev.find(n => n.tagName === randomTag.tagName && n.isActive);
-
-                if (existing && !isActive) {
-                    // Clear existing notification
-                    return prev.map(n =>
-                        n.id === existing.id ? { ...n, isActive: false } : n
-                    );
-                } else if (!existing && isActive) {
-                    // Add new notification
-                    return [{
-                        id: ++notifId,
-                        tagName: randomTag.tagName,
-                        message: randomTag.message,
-                        type: randomTag.type,
-                        category: randomTag.category,
+                // Rising edge: notification triggered
+                if (isActive && !wasActive) {
+                    setNotifications(prev => [{
+                        id: generateId(),
+                        tagName: tag.tagName,
+                        message: tag.message,
+                        type: tag.type,
+                        category: tag.category,
                         timestamp: new Date(),
                         isRead: false,
                         isActive: true
-                    }, ...prev].slice(0, 50); // Keep max 50
-                }
-                return prev;
-            });
-        }, 3000);
+                    }, ...prev].slice(0, 100)); // Keep max 100
 
-        return () => clearInterval(interval);
-    }, [isSimulating]);
+                    // Play sound for critical/alarm
+                    if (tag.type === 'Critical' || tag.type === 'Alarm') {
+                        playAlertSound();
+                    }
+                }
+                // Falling edge: notification cleared
+                else if (!isActive && wasActive) {
+                    setNotifications(prev =>
+                        prev.map(n =>
+                            n.tagName === tag.tagName && n.isActive
+                                ? { ...n, isActive: false }
+                                : n
+                        )
+                    );
+                }
+
+                previousStates.set(tag.tagName, isActive);
+            }
+        }
+    }, [rawData]);
+
+    const playAlertSound = () => {
+        try {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ==');
+            audio.volume = 0.3;
+            audio.play().catch(() => { });
+        } catch (e) { }
+    };
+
 
     // Actions
     const markAsRead = (id) => {
@@ -161,10 +199,11 @@ function Notifications() {
                                 <Bell className="text-amber-500" />
                                 Notifications en Temps Réel
                             </h1>
-                            {/* LIVE Indicator */}
-                            <div className="flex items-center gap-2 bg-green-500/15 text-green-500 px-3 py-1 rounded-full text-xs font-semibold">
-                                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                                LIVE
+                            {/* LIVE/Connection Indicator */}
+                            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${isConnected ? 'bg-green-500/15 text-green-500' : 'bg-red-500/15 text-red-500'}`}>
+                                <Wifi size={14} />
+                                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                                {isConnected ? 'LIVE' : 'DISCONNECTED'}
                             </div>
                         </div>
 
@@ -244,8 +283,8 @@ function Notifications() {
                             <button
                                 onClick={() => setShowActiveOnly(!showActiveOnly)}
                                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${showActiveOnly
-                                        ? 'bg-blue-500/30 border-blue-500 text-blue-400'
-                                        : 'bg-blue-500/15 border-blue-500/30 text-blue-500'
+                                    ? 'bg-blue-500/30 border-blue-500 text-blue-400'
+                                    : 'bg-blue-500/15 border-blue-500/30 text-blue-500'
                                     }`}
                             >
                                 <Zap size={14} />
@@ -264,16 +303,6 @@ function Notifications() {
                             >
                                 <Trash2 size={14} />
                                 Clear Inactive
-                            </button>
-                            <button
-                                onClick={() => setIsSimulating(!isSimulating)}
-                                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${isSimulating
-                                        ? 'bg-green-500/30 border-green-500 text-green-400'
-                                        : 'bg-gray-500/15 border-gray-500/30 text-gray-500'
-                                    }`}
-                            >
-                                <RefreshCw size={14} className={isSimulating ? 'animate-spin' : ''} />
-                                Simulation
                             </button>
                         </div>
                     </div>
@@ -334,8 +363,8 @@ function Notifications() {
                                     {/* Status */}
                                     <div className="flex flex-col items-center gap-1 px-2">
                                         <span className={`w-3 h-3 rounded-full ${notification.isActive
-                                                ? 'bg-green-500 shadow-lg shadow-green-500/50 animate-pulse'
-                                                : 'bg-gray-500'
+                                            ? 'bg-green-500 shadow-lg shadow-green-500/50 animate-pulse'
+                                            : 'bg-gray-500'
                                             }`} />
                                         <span className={`text-[10px] uppercase ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                                             {notification.isActive ? 'ACTIVE' : 'CLEARED'}

@@ -5,6 +5,19 @@
 
 // Complete tag name mappings for MQTT (from supension.component.ts HISTORY_TAG_NAMES)
 export const TAG_MAPPINGS = {
+    // ===================== EQUIPMENT CARD ALIASES =====================
+    // These are aliased names used by EquipmentCard component
+    fuelLevel: 'Reservoir_de_carburant_diesel_niveau_de_remplissage_en',
+    loadWeight: 'Charge_nette_en_tonnes',
+    windSpeed: 'Vitesse_du_vent_valeur_reelle',
+    hydraulicTemp: 'Temperature_du_systeme_hydraulique',
+    // Status detection aliases
+    dieselRunning: 'Uberwachung_Signal_Dieselmotor_in_Betrieb',
+    mainSwitch: 'Kranhauptschalter_ist_EIN',
+    // Accessory detection aliases
+    spreader: 'Ruckmeldung_1_Spreader_gesteckt',
+    twinlift: 'VAR_Ruckmeldung_2_Twinlift_Spreader_gesteckt',
+
     // ===================== LOAD & SAFETY =====================
     chargeNette: 'Charge_nette_en_tonnes',
     vitesseVent: 'Vitesse_du_vent_valeur_reelle',
@@ -158,6 +171,60 @@ export const TAG_MAPPINGS = {
     translationValeurConsigne: 'Translation_valeur_de_consigne',
     sollwertDruckLenkpumpe1: 'Sollwert_Druckabschneidung_Lenkpumpe_1',
     sollwertDruckLenkpumpe2: 'Sollwert_Druckabschneidung_Lenkpumpe_2',
+
+    // ===================== HOIST CALIBRATION =====================
+    cu1Pzd4Hoist1Dms1P1: 'CU1_PZD4_Hoist1_DMS1_P1_Abgleich',
+    cu1Pzd5Hoist1Dms2P1: 'CU1_PZD5_Hoist1_DMS2_P1_Abgleich',
+    cu1Pzd6Hoist1Dms1P2: 'CU1_PZD6_Hoist1_DMS1_P2_Abgleich',
+    cu1Pzd7Hoist1Dms2P2: 'CU1_PZD7_Hoist1_DMS2_P2_Abgleich',
+    cu1Pzd8Hoist2Dms1P1: 'CU1_PZD8_Hoist2_DMS1_P1_Abgleich',
+    cu1Pzd9Hoist2Dms2P1: 'CU1_PZD9_Hoist2_DMS2_P1_Abgleich',
+    cu1Pzd10Hoist2Dms1P2: 'CU1_PZD10_Hoist2_DMS1_P2_Abgleich',
+    cu1Pzd11Hoist2Dms2P2: 'CU1_PZD11_Hoist2_DMS2_P2_Abgleich',
+
+    // ===================== HOIST TORQUE =====================
+    levageCoupleAccelRapide: 'Levage_couple_d_acceleration_vitesse_rapide',
+    levageCoupleFreinRapide: 'Levage_couple_de_freinage_vitesse_rapide',
+    levageCoupleAccelMoyen: 'Levage_couple_d_acceleration_vitesse_moyenne',
+    levageCoupleFreinMoyen: 'Levage_couple_de_freinage_vitesse_moyenne',
+    levageCoupleAccelLent: 'Levage_couple_d_acceleration_vitesse_lente',
+    levageCoupleFreinLent: 'Levage_couple_de_freinage_vitesse_lente',
+
+    // ===================== LUFFING TORQUE =====================
+    abaissCouplAccelRapide: 'Abaisser_la_fleche_couple_d_acceleration_vitesse_rapide',
+    abaissCouplFreinRapide: 'Abaisser_la_fleche_couple_de_freinage_vitesse_rapide',
+    relevageCouplAccelRapide: 'Relevage_de_la_fleche_couple_d_acceleration_vitesse_rapide',
+    relevageCouplFreinRapide: 'Relevage_de_la_fleche_couple_de_freinage_vitesse_rapide',
+    abaissCouplAccelMoyen: 'Abaisser_la_fleche_couple_d_acceleration_vitesse_moyenne',
+    abaissCouplFreinMoyen: 'Abaisser_la_fleche_couple_de_freinage_vitesse_moyenne',
+    relevageCouplAccelMoyen: 'Relevage_de_la_fleche_couple_d_acceleration_vitesse_moyenne',
+    relevageCouplFreinMoyen: 'Relevage_de_la_fleche_couple_de_freinage_vitesse_moyenne',
+    abaissCouplAccelLent: 'Abaisser_la_fleche_couple_d_acceleration_vitesse_lente',
+    abaissCouplFreinLent: 'Abaisser_la_fleche_couple_de_freinage_vitesse_lente',
+    relevageCouplAccelLent: 'Relevage_de_la_fleche_couple_d_acceleration_vitesse_lente',
+    relevageCouplFreinLent: 'Relevage_de_la_fleche_couple_de_freinage_vitesse_lente',
+
+    // ===================== LUFFING VALVES =====================
+    sollwerteDrosselTandemliftYminP: 'Sollwerte_Drosselventil_Wippzylinder_Tandemlift_YMINP',
+    sollwerteDrosselTandemliftYmaxP: 'Sollwerte_Drosselventil_Wippzylinder_Tandemlift_YMAXP',
+    sollwerteDrosselTandemliftYminN: 'Sollwerte_Drosselventil_Wippzylinder_Tandemlift_YMINN',
+    sollwerteDrosselTandemliftYmaxN: 'Sollwerte_Drosselventil_Wippzylinder_Tandemlift_YMAXN',
+
+    // ===================== TRANSLATION CONTROL =====================
+    consignePompeTranslRapideYminP: 'Valeurs_de_cons_pompe_hydraul_ppale_pour_mec_translation_rapide_YMINP',
+    consignePompeTranslRapideYmaxP: 'Valeurs_de_cons_pompe_hydraul_ppale_pour_mec_translation_rapide_YMAXP',
+    consignePompeTranslRapideYminN: 'Valeurs_de_cons_pompe_hydraul_ppale_pour_mec_translation_rapide_YMINN',
+    consignePompeTranslRapideYmaxN: 'Valeurs_de_cons_pompe_hydraul_ppale_pour_mec_translation_rapide_YMAXN',
+    consigneSoupapeTranslRapideYminP: 'Valeurs_de_consigne_pour_la_soupape_de_translation_rapide_YMINP',
+    consigneSoupapeTranslRapideYmaxP: 'Valeurs_de_consigne_pour_la_soupape_de_translation_rapide_YMAXP',
+    consigneSoupapeTranslRapideYminN: 'Valeurs_de_consigne_pour_la_soupape_de_translation_rapide_YMINN',
+    consigneSoupapeTranslRapideYmaxN: 'Valeurs_de_consigne_pour_la_soupape_de_translation_rapide_YMAXN',
+
+    // ===================== GRAB CONTROL =====================
+    motorGrabActive: 'Motorgreiferbetrieb',
+    grabCmdClose: 'TK_Steuerhebel_Motorgreifer_Hubwerk2_Schlieen',
+    grabCmdOpen: 'TK_Steuerhebel_Motorgreifer_Hubwerk2_Offnen',
+
 }
 
 // Widget category definitions for dashboard (expanded with all categories)
@@ -385,6 +452,74 @@ export const TELEMETRY_CATEGORIES = {
             { key: 'coupleEntrainement', label: 'Couple', unit: '%', min: 0, max: 100, type: 'gauge' },
         ]
     },
+    hoistCalibration: {
+        title: 'Hoist Calibration',
+        icon: 'Settings',
+        color: 'slate',
+        widgets: [
+            { key: 'cu1Pzd4Hoist1Dms1P1', label: 'DMS1 P1', type: 'digital' },
+            { key: 'cu1Pzd5Hoist1Dms2P1', label: 'DMS2 P1', type: 'digital' },
+            { key: 'cu1Pzd6Hoist1Dms1P2', label: 'DMS1 P2', type: 'digital' },
+            { key: 'cu1Pzd7Hoist1Dms2P2', label: 'DMS2 P2', type: 'digital' },
+            { key: 'cu1Pzd8Hoist2Dms1P1', label: 'H2 DMS1 P1', type: 'digital' },
+            { key: 'cu1Pzd9Hoist2Dms2P1', label: 'H2 DMS2 P1', type: 'digital' },
+        ]
+    },
+    hoistTorque: {
+        title: 'Hoist Torque',
+        icon: 'Zap',
+        color: 'yellow',
+        widgets: [
+            { key: 'levageCoupleAccelRapide', label: 'Accel Rapide', type: 'digital' },
+            { key: 'levageCoupleFreinRapide', label: 'Frein Rapide', type: 'digital' },
+            { key: 'levageCoupleAccelMoyen', label: 'Accel Moyen', type: 'digital' },
+            { key: 'levageCoupleFreinMoyen', label: 'Frein Moyen', type: 'digital' },
+        ]
+    },
+    luffingTorque: {
+        title: 'Luffing Torque',
+        icon: 'MoveVertical',
+        color: 'violet',
+        widgets: [
+            { key: 'abaissCouplAccelRapide', label: 'Abaiss. Accel', type: 'digital' },
+            { key: 'relevageCouplAccelRapide', label: 'Relev. Accel', type: 'digital' },
+            { key: 'abaissCouplFreinRapide', label: 'Abaiss. Frein', type: 'digital' },
+            { key: 'relevageCouplFreinRapide', label: 'Relev. Frein', type: 'digital' },
+        ]
+    },
+    luffingControl: {
+        title: 'Luffing Valves',
+        icon: 'Settings',
+        color: 'cyan',
+        widgets: [
+            { key: 'sollwerteDrosselTandemliftYminP', label: 'Tandem YminP', type: 'digital' },
+            { key: 'sollwerteDrosselTandemliftYmaxP', label: 'Tandem YmaxP', type: 'digital' },
+            { key: 'sollwerteDrosselTandemliftYminN', label: 'Tandem YminN', type: 'digital' },
+            { key: 'sollwerteDrosselTandemliftYmaxN', label: 'Tandem YmaxN', type: 'digital' },
+        ]
+    },
+    translationControl: {
+        title: 'Translation Control',
+        icon: 'Truck',
+        color: 'fuchsia',
+        widgets: [
+            { key: 'consignePompeTranslRapideYminP', label: 'Pump Fast YminP', type: 'digital' },
+            { key: 'consignePompeTranslRapideYmaxP', label: 'Pump Fast YmaxP', type: 'digital' },
+            { key: 'consigneSoupapeTranslRapideYminP', label: 'Valve Fast YminP', type: 'digital' },
+            { key: 'consigneSoupapeTranslRapideYmaxP', label: 'Valve Fast YmaxP', type: 'digital' },
+        ]
+    },
+    grabStatus: {
+        title: 'Grab Status',
+        icon: 'Box',
+        color: 'orange',
+        widgets: [
+            { key: 'motorGrabActive', label: 'Grab Active', type: 'boolean' },
+            { key: 'grabCmdClose', label: 'Cmd Close', type: 'boolean' },
+            { key: 'grabCmdOpen', label: 'Cmd Open', type: 'boolean' },
+            { key: 'spreaderConnected', label: 'Spreader', type: 'boolean' },
+        ]
+    }
 }
 
 // Generate default telemetry state with all keys
