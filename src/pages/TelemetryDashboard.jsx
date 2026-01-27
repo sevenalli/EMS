@@ -57,7 +57,7 @@ const TelemetryDashboard = () => {
     const portId = equipmentData?.portId || 'SMA'  // Default to SMA if not found
 
     // Dynamic topic based on port/equipmentId format
-    const dynamicTopic = `${portId}/${equipmentId}`
+    const dynamicTopic = `${portId.toLowerCase()}/${equipmentId}`
 
     // History hook
     const {
@@ -80,7 +80,7 @@ const TelemetryDashboard = () => {
     const playbackRef = useRef(null)
 
     // State for MQTT configuration
-    const [brokerUrl, setBrokerUrl] = useState('ws://localhost:9001')
+    const [brokerUrl, setBrokerUrl] = useState('ws://localhost:8000/mqtt')
     const [showSettings, setShowSettings] = useState(false)
 
     // MQTT hook for live telemetry - useMock=false for real data with dynamic topic
@@ -122,7 +122,10 @@ const TelemetryDashboard = () => {
         if (!isHistoryMode) return
 
         const loadHistory = async () => {
-            const result = await fetchHistoricalData(selectedTimeRange)
+            // Explicitly request ALL tags defined in our mapping. 
+            // Sending default [] causes backend to return only a single "fresh" tag.
+            const allTags = Object.values(TAG_MAPPINGS);
+            const result = await fetchHistoricalData(selectedTimeRange, allTags, equipmentId)
 
             if (result?.history) {
                 setHistoryData(result.history)
@@ -137,7 +140,7 @@ const TelemetryDashboard = () => {
         }
 
         loadHistory()
-    }, [isHistoryMode, selectedTimeRange, fetchHistoricalData])
+    }, [isHistoryMode, selectedTimeRange, fetchHistoricalData, equipmentId])
 
     // Playback logic - same pattern as Angular's supension component
     useEffect(() => {
@@ -427,19 +430,22 @@ const TelemetryDashboard = () => {
                     {/* Right - Connection status & Time display */}
                     <div className="text-right flex items-center gap-3">
                         {/* MQTT Connection Status (only show in live mode) */}
-                        {!isHistoryMode && (
-                            <div
-                                onClick={() => setShowSettings(!showSettings)}
-                                className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs cursor-pointer transition-colors ${mqttConnected
-                                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                                    : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
-                                    }`}
-                                title="Click to configure broker"
-                            >
-                                {mqttConnected ? <Wifi size={14} /> : <WifiOff size={14} />}
-                                {mqttConnected ? 'Connected' : 'Disconnected'}
-                            </div>
-                        )}
+                        {!isHistoryMode && (() => {
+                            const isOnline = mqttConnected || isEquipmentOnline(equipmentId) || !!discoveredData
+                            return (
+                                <div
+                                    onClick={() => setShowSettings(!showSettings)}
+                                    className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs cursor-pointer transition-colors ${isOnline
+                                        ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                                        : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
+                                        }`}
+                                    title="Click to configure broker"
+                                >
+                                    {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
+                                    {isOnline ? 'Connected' : 'Disconnected'}
+                                </div>
+                            )
+                        })()}
                         <div>
                             <div className="text-xs text-gray-400">
                                 {isHistoryMode ? 'Playback' : 'Live'}

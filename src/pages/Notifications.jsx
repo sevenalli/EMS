@@ -3,11 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
     Bell, AlertOctagon, AlertTriangle, XCircle, Info,
     ChevronLeft, Search, Filter, Zap, Mail, CheckCheck, Trash2,
-    RefreshCw, Wifi
+    RefreshCw, Wifi, History, Calendar, Play, Pause, SkipBack, SkipForward
 } from 'lucide-react';
 import { NOTIFICATION_TAGS, NOTIFICATION_CATEGORIES, TYPE_COLORS, NOTIFICATION_TAG_MAP } from '../data/notificationTags';
+import { TAG_MAPPINGS, TIME_RANGES, PLAYBACK_SPEEDS } from '../data/telemetryData';
 import { useMqtt } from '../hooks/useMqtt';
 import { useTopicDiscovery } from '../hooks/useTopicDiscovery';
+import { useHistory } from '../hooks/useHistory';
 import { useStore, mockData } from '../store/store';
 
 // Generate unique ID
@@ -51,6 +53,15 @@ function Notifications() {
     const [searchText, setSearchText] = useState('');
     const [showActiveOnly, setShowActiveOnly] = useState(false);
 
+    // History Mode State
+    const [isHistoryMode, setIsHistoryMode] = useState(false);
+    const [selectedTimeRange, setSelectedTimeRange] = useState(TIME_RANGES[0]); // Default 1h
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [playbackSpeed, setPlaybackSpeed] = useState(PLAYBACK_SPEEDS[0]);
+    const [playbackProgress, setPlaybackProgress] = useState(0);
+    const [playbackIndex, setPlaybackIndex] = useState(0);
+    const playbackRef = useRef(null);
+
     // Track previous tag states for edge detection
     const previousStatesRef = useRef(new Map());
 
@@ -62,9 +73,16 @@ function Notifications() {
     // Also use specific MQTT for single equipment if provided
     const { rawData } = useMqtt(equipmentId || 'notifications', {
         useMock: false,
-        brokerUrl: 'ws://localhost:9001',
+        brokerUrl: 'ws://localhost:8000/mqtt',
         topic: dynamicTopic
     });
+
+    // History Hook
+    const {
+        historyData,
+        isLoading: historyLoading,
+        fetchHistoricalData
+    } = useHistory();
 
     // Stats
     const getCriticalCount = () => notifications.filter(n => n.type === 'Critical' && n.isActive).length;
@@ -99,19 +117,111 @@ function Notifications() {
         applyFilters();
     }, [applyFilters]);
 
-    // Process live MQTT rawData for notifications
+    // Load History Data when entering history mode
     useEffect(() => {
-        if (!rawData) return;
+        if (isHistoryMode && equipmentId && selectedTimeRange) {
+            // Need to request ALL tags because Notification tags cover many categories
+            // Simplest way is to define tags as [], so backend returns all. 
+            // OR explicitly map notification tags. The previous logic was "fetch all" is safest.
+            const allTags = Object.values(TAG_MAPPINGS);
+            fetchHistoricalData(selectedTimeRange, allTags, equipmentId);
+            setPlaybackIndex(0);
+            setPlaybackProgress(0);
+            setIsPlaying(false);
+            setNotifications([]); // Clear live notifications when entering history
+            previousStatesRef.current.clear();
+        } else if (!isHistoryMode) {
+            // Reset when going back to live? Optional.
+        }
+    }, [isHistoryMode, selectedTimeRange, equipmentId]);
+
+    // Playback Logic
+    useEffect(() => {
+        if (!isHistoryMode || !isPlaying || historyData.length === 0) return;
+
+        playbackRef.current = setInterval(() => {
+            setPlaybackIndex(prev => {
+                const next = prev + 1;
+                if (next >= historyData.length) {
+                    setIsPlaying(false);
+                    return prev;
+                }
+                setPlaybackProgress((next / (historyData.length - 1)) * 100);
+                return next;
+            });
+        }, 1000 / playbackSpeed.value);
+
+        return () => clearInterval(playbackRef.current);
+    }, [isHistoryMode, isPlaying, historyData, playbackSpeed]);
+
+    // Playback Controls
+    const togglePlayback = () => setIsPlaying(prev => !prev);
+    const skipBackward = () => {
+        const newIndex = Math.max(0, playbackIndex - 10);
+        setPlaybackIndex(newIndex);
+        setPlaybackProgress((newIndex / ((historyData?.length || 1) - 1)) * 100);
+    };
+    const skipForward = () => {
+        const newIndex = Math.min((historyData?.length || 1) - 1, playbackIndex + 10);
+        setPlaybackIndex(newIndex);
+        setPlaybackProgress((newIndex / ((historyData?.length || 1) - 1)) * 100);
+    };
+
+    // Process Data (Live or History) for Notifications
+    useEffect(() => {
+        // Source selection
+        let currentData = null;
+        let timestamp = new Date();
+
+        if (isHistoryMode) {
+            if (historyData && historyData[playbackIndex]) {
+                currentData = historyData[playbackIndex].data;
+                timestamp = new Date(historyData[playbackIndex].timestamp);
+            }
+        } else {
+            currentData = rawData;
+            timestamp = new Date();
+        }
+
+        if (!currentData) return;
 
         const previousStates = previousStatesRef.current;
 
-        // Check each notification tag against incoming raw telemetry data
+        // Check each notification tag
         for (const tag of NOTIFICATION_TAGS) {
-            // The rawData has the original MQTT keys (e.g. Dieselmotor_Not_Aus)
-            const currentValue = rawData[tag.tagName];
+            // KEY MAPPING LOGIC:
+            // Tag definitions use RAW keys (e.g., Dieselmotor_Not_Aus)
+            // HistoryService returns data with FRIENDLY keys (e.g., dieselEngineStatus)
+            // Live MQTT returns RAW keys.
+
+            let currentValue = undefined;
+
+            if (isHistoryMode) {
+                // In History Mode, we must find the friendly key for this raw tag
+                // If the raw tag is NOT in TAG_MAPPINGS, we try using the raw tag itself (fallback)
+                // We can find the key by searching TAG_MAPPINGS values? 
+                // TAG_MAPPINGS is { friendly: raw }. 
+                // So we search for key where value === tag.tagName
+                const friendlyKey = Object.keys(TAG_MAPPINGS).find(k => TAG_MAPPINGS[k] === tag.tagName);
+
+                if (friendlyKey && currentData[friendlyKey] !== undefined) {
+                    currentValue = currentData[friendlyKey];
+                } else if (currentData[tag.tagName] !== undefined) {
+                    // Fallback check if simple raw key exists
+                    currentValue = currentData[tag.tagName];
+                }
+            } else {
+                // Live Mode: Direct Raw Key Access
+                currentValue = currentData[tag.tagName];
+            }
 
             if (currentValue !== undefined) {
-                const isActive = Boolean(currentValue);
+                // Determine active state (handle numbers, strings, bools)
+                let isActive = false;
+                if (typeof currentValue === 'boolean') isActive = currentValue;
+                else if (typeof currentValue === 'number') isActive = currentValue > 0;
+                else if (typeof currentValue === 'string') isActive = currentValue === 'true' || currentValue === '1';
+
                 const wasActive = previousStates.get(tag.tagName) || false;
 
                 // Rising edge: notification triggered
@@ -122,13 +232,15 @@ function Notifications() {
                         message: tag.message,
                         type: tag.type,
                         category: tag.category,
-                        timestamp: new Date(),
+                        timestamp: timestamp, // Use source timestamp
                         isRead: false,
                         isActive: true
                     }, ...prev].slice(0, 100)); // Keep max 100
 
-                    // Play sound for critical/alarm
-                    if (tag.type === 'Critical' || tag.type === 'Alarm') {
+                    // Play sound (only live mode to avoid spam during playback?)
+                    // Or play sound only if we are "playing" but user might pause and check.
+                    // Let's sound only in LIVE mode to prevent chaos.
+                    if (!isHistoryMode && (tag.type === 'Critical' || tag.type === 'Alarm')) {
                         playAlertSound();
                     }
                 }
@@ -146,7 +258,7 @@ function Notifications() {
                 previousStates.set(tag.tagName, isActive);
             }
         }
-    }, [rawData]);
+    }, [rawData, isHistoryMode, historyData, playbackIndex]);
 
     const playAlertSound = () => {
         try {
@@ -197,35 +309,112 @@ function Notifications() {
                             </button>
                             <h1 className={`text-xl font-bold flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                                 <Bell className="text-amber-500" />
-                                Notifications en Temps Réel
+                                Notifications
                             </h1>
-                            {/* LIVE/Connection Indicator */}
-                            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${isConnected ? 'bg-green-500/15 text-green-500' : 'bg-red-500/15 text-red-500'}`}>
-                                <Wifi size={14} />
-                                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                                {isConnected ? 'LIVE' : 'DISCONNECTED'}
+
+                            {/* Mode Indicator */}
+                            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${isHistoryMode
+                                ? 'bg-blue-500/15 text-blue-500'
+                                : isConnected ? 'bg-green-500/15 text-green-500' : 'bg-red-500/15 text-red-500'
+                                }`}>
+                                {isHistoryMode ? <History size={14} /> : <Wifi size={14} />}
+                                <span className={`w-2 h-2 rounded-full ${isHistoryMode ? 'bg-blue-500'
+                                    : isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+                                    }`} />
+                                {isHistoryMode ? 'HISTORY' : isConnected ? 'LIVE' : 'OFFLINE'}
                             </div>
                         </div>
 
-                        {/* Stats */}
-                        <div className="flex gap-2 flex-wrap">
-                            {getCriticalCount() > 0 && (
-                                <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/20 text-red-500 animate-pulse">
-                                    <AlertOctagon size={16} />
-                                    {getCriticalCount()} Critical
-                                </span>
+                        {/* Controls: Mode Toggle & History Params */}
+                        <div className="flex items-center gap-4">
+                            {/* Mode Toggle */}
+                            <div className="flex bg-black/20 rounded-lg p-1 border border-white/10">
+                                <button
+                                    onClick={() => setIsHistoryMode(false)}
+                                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${!isHistoryMode
+                                        ? 'bg-green-600 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white hover:bg-white/10'
+                                        }`}
+                                >
+                                    Live
+                                </button>
+                                <button
+                                    onClick={() => setIsHistoryMode(true)}
+                                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${isHistoryMode
+                                        ? 'bg-blue-600 text-white shadow-lg'
+                                        : 'text-gray-400 hover:text-white hover:bg-white/10'
+                                        }`}
+                                >
+                                    History
+                                </button>
+                            </div>
+
+                            {/* Time Range (History Only) */}
+                            {isHistoryMode && (
+                                <select
+                                    value={selectedTimeRange.label}
+                                    onChange={(e) => {
+                                        const range = TIME_RANGES.find(r => r.label === e.target.value);
+                                        if (range) setSelectedTimeRange(range);
+                                    }}
+                                    className="px-2 py-1.5 rounded bg-white/10 text-xs border border-white/20 text-white focus:outline-none"
+                                >
+                                    {TIME_RANGES.map(range => (
+                                        <option key={range.label} value={range.label} className="bg-gray-800">
+                                            {range.label}
+                                        </option>
+                                    ))}
+                                </select>
                             )}
-                            <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-500/20 text-blue-500">
-                                <Zap size={16} />
-                                {getActiveCount()} Active
-                            </span>
-                            <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-amber-500/20 text-amber-500">
-                                <Mail size={16} />
-                                {getUnreadCount()} Unread
-                            </span>
+
+                            {/* Playback Controls (History Only) */}
+                            {isHistoryMode && historyData.length > 0 && (
+                                <div className="flex items-center gap-2">
+                                    <button onClick={skipBackward} className="p-1.5 rounded hover:bg-white/10 text-white">
+                                        <SkipBack size={16} />
+                                    </button>
+                                    <button
+                                        onClick={togglePlayback}
+                                        className="p-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white"
+                                    >
+                                        {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                                    </button>
+                                    <button onClick={skipForward} className="p-1.5 rounded hover:bg-white/10 text-white">
+                                        <SkipForward size={16} />
+                                    </button>
+
+                                    {/* Progress Bar Mini */}
+                                    <div className="w-24 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-blue-400"
+                                            style={{ width: `${playbackProgress}%` }}
+                                        />
+                                    </div>
+
+                                    <span className="text-xs text-white/70 tabular-nums">
+                                        {playbackIndex + 1}/{historyData.length}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+                {getCriticalCount() > 0 && (
+                    <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/20 text-red-500 animate-pulse">
+                        <AlertOctagon size={16} />
+                        {getCriticalCount()} Critical
+                    </span>
+                )}
+                <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-500/20 text-blue-500">
+                    <Zap size={16} />
+                    {getActiveCount()} Active
+                </span>
+                <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-amber-500/20 text-amber-500">
+                    <Mail size={16} />
+                    {getUnreadCount()} Unread
+                </span>
             </div>
 
             {/* Filters */}

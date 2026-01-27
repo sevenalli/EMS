@@ -14,7 +14,7 @@ import { useStore, mockData } from '../store/store'
  */
 export const useGlobalMqtt = (options = {}) => {
     const {
-        brokerUrl = 'ws://localhost:9001',
+        brokerUrl = 'ws://localhost:8000/mqtt',
         topic = 'site/pi5/generator/snapshot',
         enabled = true,
     } = options

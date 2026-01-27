@@ -41,8 +41,8 @@ const accessoryLabels = {
 const EquipmentCard = ({ equipmentId, initialStatus = 'off', isOnline = false, mqttData = null, portId = 'SMA' }) => {
     const navigate = useNavigate()
 
-    // Build dynamic topic based on port/equipmentId format
-    const dynamicTopic = `${portId}/${equipmentId}`
+    // Build dynamic topic based on port/equipmentId format (lowercase port for broker compatibility)
+    const dynamicTopic = `${portId.toLowerCase()}/${equipmentId}`
 
     const { telemetry: mqttTelemetry, isConnected } = useMqtt(equipmentId, {
         useMock: false,

@@ -16,7 +16,7 @@ import { parseTelemetry } from './useMqtt'
  */
 export const useTopicDiscovery = (options = {}) => {
     const {
-        brokerUrl = 'ws://localhost:9001',
+        brokerUrl = 'ws://localhost:8000/mqtt',
         portFilter = null,  // null = subscribe to all ('+/+')
         onlineThreshold = 30000,  // 30 seconds
     } = options
@@ -71,8 +71,8 @@ export const useTopicDiscovery = (options = {}) => {
 
         const connectMqtt = async () => {
             try {
-                // Determine topic pattern
-                const topicPattern = portFilter ? `${portFilter}/#` : '+/+'
+                // Determine topic pattern - use lowercase for broker compatibility
+                const topicPattern = portFilter ? `${portFilter.toLowerCase()}/#` : '+/+'
                 console.log(`[TopicDiscovery] Connecting to ${brokerUrl}, subscribing to ${topicPattern}`)
 
                 const client = mqtt.connect(brokerUrl, {

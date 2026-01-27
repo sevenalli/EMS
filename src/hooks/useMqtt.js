@@ -17,11 +17,12 @@ const generateMockTelemetry = (equipmentId) => {
 
 // Parse the telemetry data with friendly keys
 const parseTelemetry = (payload) => {
-    if (!payload?.data) return null
+    if (!payload) return null
 
-    const data = payload.data || payload // Handle both wrapped and unwrapped data
+    // Handle both wrapped (payload.data) and unwrapped payloads
+    const data = payload.data || payload
     const parsed = {
-        timestamp: payload.ts || new Date().toISOString(),
+        timestamp: payload.ts || payload.timestamp || new Date().toISOString(),
         // Extract metadata fields from MQTT message
         site: payload.site || null,
         terminal: payload.terminal || null,
@@ -29,10 +30,19 @@ const parseTelemetry = (payload) => {
         host: payload.host || null,
     }
 
-    // Map all keys from TAG_MAPPINGS
+    // Map all keys from TAG_MAPPINGS - check both the data object and root payload
     Object.entries(TAG_MAPPINGS).forEach(([friendlyKey, mqttKey]) => {
+        // First check in the data object
         if (data[mqttKey] !== undefined) {
             parsed[friendlyKey] = data[mqttKey]
+        }
+        // Also check for friendlyKey directly (in case data comes pre-mapped)
+        else if (data[friendlyKey] !== undefined) {
+            parsed[friendlyKey] = data[friendlyKey]
+        }
+        // Check root payload as well
+        else if (payload[mqttKey] !== undefined) {
+            parsed[friendlyKey] = payload[mqttKey]
         }
     })
 
@@ -50,7 +60,7 @@ const parseTelemetry = (payload) => {
 export const useMqtt = (equipmentId, options = {}) => {
     const {
         useMock = true,
-        brokerUrl = 'ws://localhost:9001',
+        brokerUrl = 'ws://localhost:8000/mqtt',
         topic = 'site/pi5/generator/snapshot',
     } = options
 

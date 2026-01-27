@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { TAG_MAPPINGS } from '../data/telemetryData'
+import { fetchEquipmentHistory } from '../api/HistoryService'
 
 /**
  * History Service Hook
@@ -62,137 +63,76 @@ export const useHistory = () => {
      * Same as Angular's historyService.getTagHistory()
      * @param {object} timeRange - Time range config with unit and value
      * @param {string[]} customTags - Optional list of specific tags to fetch
+     * @param {string} equipmentId - Equipment ID to fetch history for
      */
-    const fetchHistoricalData = useCallback(async (timeRange, customTags = null) => {
+    const fetchHistoricalData = useCallback(async (timeRange, customTags = null, equipmentId = 'MM1GM11701') => {
         const tagNames = customTags || HISTORY_TAG_NAMES
-        console.log('[fetchHistoricalData] Starting fetch for time range:', timeRange)
-        console.log('[fetchHistoricalData] Using', tagNames.length, 'tags:', customTags ? 'CUSTOM' : 'DEFAULT')
+        console.log('[fetchHistoricalData] Starting fetch for equipment:', equipmentId, 'time range:', timeRange)
         setIsLoading(true)
         setError('')
 
+        // Calculate time range using helper (imported or local logic)
         const endTime = new Date()
-        let startTime = new Date()
-
-        // Calculate start time based on range
+        const startTime = new Date()
         if (timeRange.unit === 'hours') {
             startTime.setHours(startTime.getHours() - timeRange.value)
         } else if (timeRange.unit === 'days') {
             startTime.setDate(startTime.getDate() - timeRange.value)
         }
 
-        console.log('[fetchHistoricalData] Time range:', startTime.toISOString(), 'to', endTime.toISOString())
-
         try {
-            console.log('[fetchHistoricalData] Making API request to:', `${API_BASE_URL}/history/tags`)
+            // Use HistoryService
+            const historyData = await fetchEquipmentHistory(equipmentId, startTime, endTime, [])
 
-            const requestBody = {
-                tagNames: tagNames,
-                startTime: startTime.toISOString(),
-                endTime: endTime.toISOString(),
-                limit: 10000
-            }
-            console.log('[fetchHistoricalData] Request body:', JSON.stringify(requestBody, null, 2))
-
-            // Real API call - POST /api/history/tags
-            const response = await fetch(`${API_BASE_URL}/history/tags`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody)
-            })
-
-            console.log('[fetchHistoricalData] Response status:', response.status)
-            console.log('[fetchHistoricalData] Response headers:', Object.fromEntries(response.headers.entries()))
-
-            if (!response.ok) {
-                const errorText = await response.text()
-                console.error('[fetchHistoricalData] API error response:', errorText)
-                throw new Error(`API error: ${response.status}`)
-            }
-
-            const result = await response.json()
-            console.log('[fetchHistoricalData] API response:', {
-                count: result.count,
-                tagCount: result.tagCount,
-                timeRange: result.timeRange,
-                rangeMinutes: result.rangeMinutes,
-                downsampled: result.downsampled,
-                queryTimeMs: result.queryTimeMs,
-                dataLength: result.data?.length
-            })
-
-            if (!result.data || result.data.length === 0) {
+            if (!historyData || historyData.length === 0) {
                 console.warn('[fetchHistoricalData] No data returned from API')
                 setError('No data found for the selected time range')
                 setIsLoading(false)
                 return null
             }
 
-            console.log('[fetchHistoricalData] Sample data point:', result.data[0])
+            console.log('[fetchHistoricalData] Received', historyData.length, 'data points from service')
+            console.log('[fetchHistoricalData] Sample data point (from Service):', historyData[0])
 
-            // Group data by tag name
-            console.log('[fetchHistoricalData] Grouping data by tag name...')
-            const grouped = groupByTagName(result.data)
-            setPlaybackData(grouped)
+            // Transform flattened service data to grouped format for playback logic
+            // Service returns: [{ ts, fuelLevel: 45, chargeNette: 12 }, ...] (Normalized Keys)
+            // Grouped needs: Map<tagName, [{ ts, tagName, value }]>
+            // NEW OPTIMIZED LOGIC: 
+            // The HistoryService data is ALREADY a row-based array: [{ ts: "...", tag1: val, tag2: val }]
+            // We just need to convert it to the playback format: [{ timestamp: Date, data: { tag1: val... } }]
+            console.log('[fetchHistoricalData] Converting to history array format (Optimized)...');
 
-            // Extract unique timestamps and sort them
-            console.log('[fetchHistoricalData] Extracting unique timestamps...')
-            const allTimestamps = new Set()
-            grouped.forEach(points => {
-                points.forEach(p => allTimestamps.add(p.ts))
-            })
-            const sortedTimestamps = Array.from(allTimestamps)
-                .map(ts => new Date(ts))
-                .sort((a, b) => a.getTime() - b.getTime())
+            const history = historyData.map(row => {
+                const timestamp = new Date(row.ts);
+                const telemetry = { ...row };
+                delete telemetry.ts; // remove timestamp from data object
 
-            console.log('[fetchHistoricalData] Found', sortedTimestamps.length, 'unique timestamps')
-            console.log('[fetchHistoricalData] First timestamp:', sortedTimestamps[0])
-            console.log('[fetchHistoricalData] Last timestamp:', sortedTimestamps[sortedTimestamps.length - 1])
-
-            setPlaybackTimestamps(sortedTimestamps)
-
-            // Convert grouped data to history array format for playback
-            console.log('[fetchHistoricalData] Converting to history array format...')
-            const history = sortedTimestamps.map((timestamp, idx) => {
-                const telemetry = {}
-                grouped.forEach((points, tagName) => {
-                    const key = tagNameToKey(tagName)
-                    if (!key) return
-
-                    // Find the point closest to this timestamp
-                    let closestPoint = null
-                    let minDiff = Infinity
-                    for (const point of points) {
-                        const pointTime = new Date(point.ts).getTime()
-                        const diff = Math.abs(pointTime - timestamp.getTime())
-                        if (diff < minDiff) {
-                            minDiff = diff
-                            closestPoint = point
-                        }
+                // Parse booleans/floats if needed (though Service should have raw values)
+                Object.keys(telemetry).forEach(key => {
+                    const val = telemetry[key];
+                    if (val === 'true' || val === '1' || val === true) {
+                        telemetry[key] = true;
+                    } else if (val === 'false' || val === '0' || val === false) {
+                        telemetry[key] = false;
+                    } else if (typeof val === 'string' && !isNaN(parseFloat(val))) {
+                        telemetry[key] = parseFloat(val);
                     }
+                });
 
-                    if (closestPoint) {
-                        const val = closestPoint.value
-                        if (val === 'true' || val === '1') {
-                            telemetry[key] = true
-                        } else if (val === 'false' || val === '0') {
-                            telemetry[key] = false
-                        } else {
-                            telemetry[key] = parseFloat(val) || 0
-                        }
-                    }
-                })
-                return { timestamp, data: telemetry }
-            })
+                return { timestamp, data: telemetry };
+            });
 
-            console.log('[fetchHistoricalData] Created history array with', history.length, 'frames')
-            console.log('[fetchHistoricalData] Sample frame data:', history[0]?.data)
+            // Timestamps for slider
+            const sortedTimestamps = history.map(h => h.timestamp).sort((a, b) => a.getTime() - b.getTime());
+            setPlaybackTimestamps(sortedTimestamps);
 
-            setIsLoading(false)
-            console.log('[fetchHistoricalData] SUCCESS! Returning history data')
-            return { history, grouped, timestamps: sortedTimestamps }
+            console.log('[fetchHistoricalData] Created history array with', history.length, 'frames');
+
+            // We can return null for 'grouped' since we don't use it anymore for playback generation
+            setIsLoading(false);
+            return { history, grouped: new Map(), timestamps: sortedTimestamps };
         } catch (err) {
             console.error('[fetchHistoricalData] ERROR:', err.message)
-            console.error('[fetchHistoricalData] Full error:', err)
             setError(`Failed to fetch historical data: ${err.message}`)
             setIsLoading(false)
             return null
