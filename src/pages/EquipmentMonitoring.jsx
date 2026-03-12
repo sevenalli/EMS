@@ -1,5 +1,6 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useStore, mockData } from '../store/store'
 import { useMqtt } from '../hooks/useMqtt'
 import { useTopicDiscovery } from '../hooks/useTopicDiscovery'
@@ -63,6 +64,7 @@ const craneImages = {
 const EquipmentMonitoring = () => {
     const { equipmentId } = useParams()
     const navigate = useNavigate()
+    const { t } = useTranslation()
     const location = useLocation()
     const isDarkMode = useStore((state) => state.isDarkMode)
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getInventory } from '../services/equipmentAdmin'
 import { useStore, mockData } from '../store/store'
 import { useGlobalMqtt } from '../hooks/useGlobalMqtt'
@@ -30,6 +31,7 @@ const categoryIcons = {
 
 const EquipmentSelection = () => {
     const navigate = useNavigate()
+    const { t } = useTranslation()
     const {
         selectedPort,
         selectedTerminal,
@@ -161,13 +163,13 @@ const EquipmentSelection = () => {
                             }`}
                     >
                         <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-                        Retour aux ports
+                        {t('nav.backToPorts')}
                     </button>
 
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
                         <div className="flex items-center gap-3">
                             <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                                Sélection des <span className="text-primary">Équipements</span>
+                                {t('equipment.selectionTitle')}
                             </h1>
                             {selectedPort && (
                                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${isDarkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-50 text-primary'
@@ -187,7 +189,7 @@ const EquipmentSelection = () => {
                                     <WifiOff size={16} className="text-red-500" />
                                 )}
                                 <span className={`text-xs font-medium ${mqttConnected ? 'text-green-500' : 'text-red-500'}`}>
-                                    {mqttConnected ? 'MQTT Connecté' : 'Déconnecté'}
+                                    {mqttConnected ? `${t('common.online')}` : `${t('common.offline')}`}
                                 </span>
                             </div>
                             {mqttConnected && (detectedSite || detectedTerminal || detectedType || detectedHost) && (
@@ -218,8 +220,8 @@ const EquipmentSelection = () => {
                         </div>
                     </div>
                     <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
-                        Sélectionnez le terminal, la catégorie, puis les équipements à superviser
-                        {mqttConnected && <span className="text-green-500 ml-2">• Sélection automatique activée</span>}
+                        {t('equipment.selectionInstruction')}
+                        {mqttConnected && <span className="text-green-500 ml-2">• {t('equipment.autoSelectionEnabled')}</span>}
                     </p>
                 </div>
 
@@ -235,7 +237,7 @@ const EquipmentSelection = () => {
                             </div>
                             <div>
                                 <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Terminal</h3>
-                                <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Étape 1</p>
+                                <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t('equipment.step', { n: 1 })}</p>
                             </div>
                         </div>
 
@@ -271,8 +273,8 @@ const EquipmentSelection = () => {
                                 <Layers className="text-amber-500" size={20} />
                             </div>
                             <div>
-                                <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Catégorie</h3>
-                                <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Étape 2</p>
+                                <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t('equipment.category')}</h3>
+                                <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t('equipment.step', { n: 2 })}</p>
                             </div>
                         </div>
 
@@ -314,8 +316,8 @@ const EquipmentSelection = () => {
                                 <Cog className="text-green-500" size={20} />
                             </div>
                             <div>
-                                <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Équipement</h3>
-                                <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Étape 3</p>
+                                <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{t('equipment.title')}</h3>
+                                <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t('equipment.step', { n: 3 })}</p>
                             </div>
                         </div>
 
@@ -349,7 +351,7 @@ const EquipmentSelection = () => {
                             ) : (
                                 <div className={`text-center py-8 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                                     <Cog size={32} className="mx-auto mb-2 opacity-50" />
-                                    <p className="text-sm">Filtrez par terminal et catégorie</p>
+                                    <p className="text-sm">{t('equipment.filterHint')}</p>
                                 </div>
                             )}
                         </div>
@@ -365,28 +367,28 @@ const EquipmentSelection = () => {
                             <Info className="text-primary" size={20} />
                         </div>
                         <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-                            Information sur l'équipement sélectionné
+                            {t('equipment.selectedInfo')}
                         </h3>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div className={`rounded-xl p-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Port</p>
+                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t('equipment.port')}</p>
                             <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{selectedPort?.name || '—'}</p>
                         </div>
                         <div className={`rounded-xl p-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Terminal</p>
+                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t('equipment.terminal')}</p>
                             <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{selectedTerminal?.name || '—'}</p>
                         </div>
                         <div className={`rounded-xl p-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Catégorie</p>
+                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t('equipment.category')}</p>
                             <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{selectedCategory?.name || '—'}</p>
                         </div>
                         <div className={`rounded-xl p-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Équipements</p>
+                            <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{t('equipment.title')}</p>
                             <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                                 {selectedEquipment.length > 0
-                                    ? `${selectedEquipment.length} sélectionné(s)`
+                                    ? t('equipment.selectedCount', { count: selectedEquipment.length })
                                     : '—'}
                             </p>
                         </div>
@@ -405,7 +407,7 @@ const EquipmentSelection = () => {
                                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
                     >
-                        Procéder à la visualisation
+                        {t('equipment.proceed')}
                         <ArrowRight size={22} />
                     </button>
                 </div>

@@ -301,9 +301,9 @@ function Notifications() {
         const now = new Date();
         const diff = now - date;
 
-        if (diff < 60000) return 'Just now';
-        if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-        if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+        if (diff < 60000) return t('time.justNow');
+        if (diff < 3600000) return t('time.minutesAgo', { count: Math.floor(diff / 60000) });
+        if (diff < 86400000) return t('time.hoursAgo', { count: Math.floor(diff / 3600000) });
         return date.toLocaleDateString();
     };
 
@@ -322,7 +322,7 @@ function Notifications() {
                             </button>
                             <h1 className={`text-xl font-bold flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                                 <Bell className="text-amber-500" />
-                                Notifications
+                                {t('notifications.title')}
                             </h1>
 
                             {/* Mode Indicator */}
@@ -334,7 +334,7 @@ function Notifications() {
                                 <span className={`w-2 h-2 rounded-full ${isHistoryMode ? 'bg-blue-500'
                                     : isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'
                                     }`} />
-                                {isHistoryMode ? 'HISTORY' : isConnected ? 'LIVE' : 'OFFLINE'}
+                                {isHistoryMode ? t('playback.history') : isConnected ? t('playback.live') : t('common.offline')}
                             </div>
                         </div>
 
@@ -349,7 +349,7 @@ function Notifications() {
                                         : 'text-gray-400 hover:text-white hover:bg-white/10'
                                         }`}
                                 >
-                                    Live
+                                    {t('playback.live')}
                                 </button>
                                 <button
                                     onClick={() => setIsHistoryMode(true)}
@@ -358,7 +358,7 @@ function Notifications() {
                                         : 'text-gray-400 hover:text-white hover:bg-white/10'
                                         }`}
                                 >
-                                    History
+                                    {t('playback.history')}
                                 </button>
                             </div>
 
@@ -417,16 +417,16 @@ function Notifications() {
                 {getCriticalCount() > 0 && (
                     <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/20 text-red-500 animate-pulse">
                         <AlertOctagon size={16} />
-                        {getCriticalCount()} Critical
+                        {t('notifications.criticalCount', { count: getCriticalCount() })}
                     </span>
                 )}
                 <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-500/20 text-blue-500">
                     <Zap size={16} />
-                    {getActiveCount()} Active
+                    {t('notifications.activeCount', { count: getActiveCount() })}
                 </span>
                 <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-amber-500/20 text-amber-500">
                     <Mail size={16} />
-                    {getUnreadCount()} Unread
+                    {t('notifications.unreadCount', { count: getUnreadCount() })}
                 </span>
             </div>
 
@@ -436,30 +436,30 @@ function Notifications() {
                     <div className="flex flex-wrap gap-3 items-center">
                         {/* Type Filter */}
                         <div className="flex items-center gap-2">
-                            <label className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Type:</label>
+                            <label className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('notifications.typeLabel')}</label>
                             <select
                                 value={typeFilter}
                                 onChange={(e) => setTypeFilter(e.target.value)}
                                 className={`px-3 py-1.5 rounded-lg text-sm ${isDarkMode ? 'bg-black/30 border-white/10 text-white' : 'bg-gray-100 border-gray-200'} border`}
                             >
-                                <option value="all">All Types</option>
-                                <option value="Critical">Critical</option>
-                                <option value="Alarm">Alarm</option>
-                                <option value="Warning">Warning</option>
-                                <option value="Fault">Fault</option>
-                                <option value="Info">Info</option>
+                                <option value="all">{t('notifications.allTypes')}</option>
+                                <option value="Critical">{t('notifications.critical')}</option>
+                                <option value="Alarm">{t('notifications.alarm')}</option>
+                                <option value="Warning">{t('notifications.warning')}</option>
+                                <option value="Fault">{t('notifications.fault')}</option>
+                                <option value="Info">{t('notifications.info')}</option>
                             </select>
                         </div>
 
                         {/* Category Filter */}
                         <div className="flex items-center gap-2">
-                            <label className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Category:</label>
+                            <label className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('notifications.categoryLabel')}</label>
                             <select
                                 value={categoryFilter}
                                 onChange={(e) => setCategoryFilter(e.target.value)}
                                 className={`px-3 py-1.5 rounded-lg text-sm ${isDarkMode ? 'bg-black/30 border-white/10 text-white' : 'bg-gray-100 border-gray-200'} border`}
                             >
-                                <option value="all">All Categories</option>
+                                <option value="all">{t('notifications.allCategories')}</option>
                                 {NOTIFICATION_CATEGORIES.map(cat => (
                                     <option key={cat} value={cat}>{cat}</option>
                                 ))}
@@ -472,7 +472,7 @@ function Notifications() {
                                 <Search size={16} className="text-gray-500" />
                                 <input
                                     type="text"
-                                    placeholder="Search..."
+                                    placeholder={t('common.search')}
                                     value={searchText}
                                     onChange={(e) => setSearchText(e.target.value)}
                                     className={`bg-transparent border-none outline-none text-sm flex-1 ${isDarkMode ? 'text-white placeholder-gray-500' : ''}`}
@@ -490,21 +490,21 @@ function Notifications() {
                                     }`}
                             >
                                 <Zap size={14} />
-                                Active Only
+                                {t('notifications.activeOnly')}
                             </button>
                             <button
                                 onClick={markAllAsRead}
                                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-500/15 border border-blue-500/30 text-blue-500 hover:bg-blue-500/25 transition-colors"
                             >
                                 <CheckCheck size={14} />
-                                Mark All Read
+                                {t('notifications.markAllRead')}
                             </button>
                             <button
                                 onClick={clearAllInactive}
                                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-red-500/15 border border-red-500/30 text-red-500 hover:bg-red-500/25 transition-colors"
                             >
                                 <Trash2 size={14} />
-                                Clear Inactive
+                                {t('notifications.clearInactive')}
                             </button>
                         </div>
                     </div>
@@ -517,7 +517,7 @@ function Notifications() {
                     {filteredNotifications.length === 0 ? (
                         <div className={`rounded-xl p-12 text-center ${isDarkMode ? 'bg-white/5' : 'bg-white shadow-sm'}`}>
                             <Bell size={48} className={`mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`} />
-                            <p className={isDarkMode ? 'text-gray-500' : 'text-gray-400'}>No notifications</p>
+                            <p className={isDarkMode ? 'text-gray-500' : 'text-gray-400'}>{t('notifications.noNotifications')}</p>
                         </div>
                     ) : (
                         filteredNotifications.map(notification => {
@@ -569,7 +569,7 @@ function Notifications() {
                                             : 'bg-gray-500'
                                             }`} />
                                         <span className={`text-[10px] uppercase ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                            {notification.isActive ? 'ACTIVE' : 'CLEARED'}
+                                            {notification.isActive ? t('notifications.active') : t('notifications.cleared')}
                                         </span>
                                     </div>
                                 </div>

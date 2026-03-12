@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import Papa from 'papaparse'
+import { useTranslation } from 'react-i18next'
 import { useStore, mockData } from '../store/store'
 
 const rawCsvFiles = import.meta.glob('../../mapping-files/*.csv', { query: '?raw', import: 'default', eager: true })
@@ -76,6 +77,7 @@ import { exportTelemetrySnapshot } from '../utils/exportUtils'
 const TelemetryDashboard = () => {
     const { equipmentId, functionGroup } = useParams()
     const navigate = useNavigate()
+    const { t } = useTranslation()
 
     const hasDynamicTags = !!dynamicTagsMap[equipmentId]
     const equipmentTags = dynamicTagsMap[equipmentId] || []
@@ -371,7 +373,7 @@ const TelemetryDashboard = () => {
                                 windWarning ? 'bg-amber-500/20 text-amber-400' :
                                     'bg-green-500/20 text-green-400'
                                 }`}>
-                                {windDanger ? 'DANGER' : windWarning ? 'WARNING' : 'SAFE'}
+                                {windDanger ? t('telemetry.danger') : windWarning ? t('telemetry.warning') : t('telemetry.safe')}
                             </div>
                         )}
                     </div>
@@ -447,7 +449,7 @@ const TelemetryDashboard = () => {
                         <div>
                             <div className="text-xs text-gray-400">{widget.label}</div>
                             <div className={`text-sm font-bold ${isOn ? 'text-green-500' : 'text-gray-400'}`}>
-                                {isOn ? 'ON' : 'OFF'}
+                                {isOn ? t('equipment.on') : t('equipment.off')}
                             </div>
                         </div>
                     </div>
@@ -514,7 +516,7 @@ const TelemetryDashboard = () => {
                                     }`}
                             >
                                 <Radio size={16} className={!isHistoryMode ? 'animate-pulse' : ''} />
-                                LIVE
+                                {t('playback.live')}
                             </button>
                             <button
                                 onClick={() => toggleMode('history')}
@@ -524,7 +526,7 @@ const TelemetryDashboard = () => {
                                     }`}
                             >
                                 <History size={16} />
-                                HISTORY
+                                {t('playback.history')}
                             </button>
                         </div>
                     )}
@@ -542,7 +544,7 @@ const TelemetryDashboard = () => {
                                 title="Export current telemetry data as PDF, Excel, or CSV"
                             >
                                 <Download size={14} />
-                                Export
+                                {t('export.title')}
                             </button>
 
                             {/* Export Dropdown Menu */}
@@ -558,7 +560,7 @@ const TelemetryDashboard = () => {
                                             : 'hover:bg-blue-50 text-gray-800'
                                             }`}
                                     >
-                                        PDF
+                                        {t('export.pdf')}
                                     </button>
                                     <button
                                         onClick={() => handleExport('xlsx')}
@@ -567,7 +569,7 @@ const TelemetryDashboard = () => {
                                             : 'border-gray-200 hover:bg-blue-50 text-gray-800'
                                             }`}
                                     >
-                                        Excel
+                                        {t('export.xlsx')}
                                     </button>
                                     <button
                                         onClick={() => handleExport('csv')}
@@ -576,7 +578,7 @@ const TelemetryDashboard = () => {
                                             : 'border-gray-200 hover:bg-blue-50 text-gray-800'
                                             }`}
                                     >
-                                        CSV
+                                        {t('export.csv')}
                                     </button>
                                 </div>
                             )}
@@ -595,13 +597,13 @@ const TelemetryDashboard = () => {
                                     title="Click to configure broker"
                                 >
                                     {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
-                                    {isOnline ? 'Connected' : 'Disconnected'}
+                                    {isOnline ? t('common.online') : t('common.offline')}
                                 </div>
                             )
                         })()}
                         <div>
                             <div className="text-xs text-gray-400">
-                                {isHistoryMode ? 'Playback' : 'Live'}
+                                {isHistoryMode ? t('telemetry.playbackMode') : t('playback.live')}
                             </div>
                             <div className={`text-sm font-mono ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
                                 {(currentPlaybackTime || new Date()).toLocaleTimeString()}
@@ -615,7 +617,7 @@ const TelemetryDashboard = () => {
                     <div className={`px-4 py-3 border-b ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
                         <div className="flex items-center gap-4">
                             <div className="flex-1 max-w-md">
-                                <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>MQTT Broker URL</label>
+                                <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('settings.mqttBrokerUrl')}</label>
                                 <div className="flex gap-2">
                                     <input
                                         type="text"
@@ -629,7 +631,7 @@ const TelemetryDashboard = () => {
                                         onClick={() => setBrokerUrl('ws://pi5:9001')}
                                         className="px-3 py-1.5 rounded bg-blue-500/10 text-blue-500 text-xs font-medium hover:bg-blue-500/20"
                                     >
-                                        Use Pi5
+                                        {t('settings.usePi5')}
                                     </button>
                                 </div>
                             </div>
@@ -725,7 +727,7 @@ const TelemetryDashboard = () => {
                             {isLoading && (
                                 <div className="flex items-center gap-2 text-blue-400">
                                     <RefreshCw size={14} className="animate-spin" />
-                                    Loading history data...
+                                    {t('telemetry.loadingHistory')}
                                 </div>
                             )}
                             {historyError && (
@@ -736,7 +738,7 @@ const TelemetryDashboard = () => {
                             )}
                             {!isLoading && historyData.length > 0 && (
                                 <div className="text-gray-400">
-                                    {historyData.length} data points | Frame {playbackIndex + 1} of {historyData.length}
+                                    {t('telemetry.dataPoints', { count: historyData.length, frame: playbackIndex + 1, total: historyData.length })}
                                 </div>
                             )}
                         </div>
@@ -751,13 +753,13 @@ const TelemetryDashboard = () => {
                         <div className="p-8 flex flex-col items-center justify-center gap-3 text-center">
                             <Wifi size={40} className="text-gray-600" />
                             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                Loading tag map for <span className="font-semibold">{equipmentId}</span>…
+                                {t('telemetry.loadingTagMap', { id: equipmentId })}
                             </p>
                         </div>
                     ) : (
                         <>
                             <p className={`text-xs mb-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                {m5Groups.length} function groups · select a group to inspect its tags
+                                {t('telemetry.functionGroups', { count: m5Groups.length })}
                             </p>
                             <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                                 {m5Groups.map(([fn, tags]) => (
