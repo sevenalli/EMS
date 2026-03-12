@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ems-frontend
+    ports:
+      - "5173:80"
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - ems-network
+
+  # Optional: Uncomment when you have a backend service
+  # backend:
+  #   build:
+  #     context: ../path-to-backend
+  #     dockerfile: Dockerfile
+  #   container_name: ems-backend
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - NODE_ENV=production
+  #   restart: unless-stopped
+  #   networks:
+  #     - ems-network
+
+networks:
+  ems-network:
+    driver: bridge

@@ -17,11 +17,12 @@ import {
     Radio
 } from 'lucide-react'
 
-// Crane type images
-const craneImages = {
-    1: '/crane-1.png',
-    2: '/crane-2.png',
-    3: '/crane-3.png',
+// Category images map
+const categoryImages = {
+    'grue-mobile': '/equipement_icons/GrueMobiles.png',
+    'portique': '/equipement_icons/portique.png',
+    'chariot': '/equipement_icons/ElévateursPCs.png',
+    'reachstacker': '/equipement_icons/ElévateursFC.png',
 }
 
 // Accessory images
@@ -38,7 +39,7 @@ const accessoryLabels = {
     twinlift: 'Twinlift',
 }
 
-const EquipmentCard = ({ equipmentId, initialStatus = 'off', isOnline = false, mqttData = null, portId = 'SMA' }) => {
+const EquipmentCard = ({ equipment, equipmentId, initialStatus = 'off', isOnline = false, mqttData = null, portId = 'SMA' }) => {
     const navigate = useNavigate()
 
     // Build dynamic topic based on port/equipmentId format (lowercase port for broker compatibility)
@@ -54,9 +55,9 @@ const EquipmentCard = ({ equipmentId, initialStatus = 'off', isOnline = false, m
 
     const isDarkMode = useStore((state) => state.isDarkMode)
 
-    // Get equipment details from mock data
-    const equipmentData = mockData.equipment.find(eq => eq.id === equipmentId) || {}
-    const { craneType = 1, notifications = 0 } = equipmentData
+    // Get equipment details from prop or mock data
+    const equipmentData = equipment || mockData.equipment.find(eq => eq.id === equipmentId) || {}
+    const { craneType = 1, categoryId, notifications = 0 } = equipmentData
 
     // Determine accessory type from telemetry (priority: twinlift > spreader > benne)
     const getAccessoryFromTelemetry = () => {
@@ -138,7 +139,7 @@ const EquipmentCard = ({ equipmentId, initialStatus = 'off', isOnline = false, m
 
     // Handle card click - navigate to monitoring page
     const handleClick = () => {
-        navigate(`/monitoring/${equipmentId}`)
+        navigate(`/monitoring/${equipmentId}`, { state: { equipment: equipmentData } })
     }
 
     return (
@@ -194,8 +195,8 @@ const EquipmentCard = ({ equipmentId, initialStatus = 'off', isOnline = false, m
                 <div className={`w-20 h-20 rounded-xl flex items-center justify-center overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-white'
                     }`}>
                     <img
-                        src={craneImages[craneType]}
-                        alt="Crane"
+                        src={categoryImages[categoryId] || craneImages[1]} // Default to crane-1 if category missing
+                        alt={categoryId || 'Crane'}
                         className="w-16 h-16 object-contain"
                     />
                 </div>

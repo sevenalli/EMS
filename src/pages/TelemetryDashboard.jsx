@@ -1,6 +1,30 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import Papa from 'papaparse'
 import { useStore, mockData } from '../store/store'
+
+const rawCsvFiles = import.meta.glob('../../mapping-files/*.csv', { query: '?raw', import: 'default', eager: true })
+const dynamicTagsMap = {}
+
+for (const path in rawCsvFiles) {
+    const rawText = rawCsvFiles[path]
+    const equipmentCode = path.split('/').pop().replace('.csv', '')
+    
+    const parsed = Papa.parse(rawText, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: true
+    })
+    
+    dynamicTagsMap[equipmentCode] = parsed.data.map(row => ({
+        tag_id: row.Nom,
+        function_name: row.Fonction || row.Categorie || 'Général',
+        description: row.Commentaire || row.Nom,
+        address: row.Adresse,
+        category: row.Categorie,
+        unit: row.Unité || ''
+    })).filter(t => t.tag_id)
+}
 import {
     ChevronLeft,
     Play,
@@ -33,7 +57,7 @@ import {
     RotateCcw,
     MoveVertical,
     Truck,
-    Cpu
+    Download
 } from 'lucide-react'
 import SemiGauge from '../components/SemiGauge'
 import {
@@ -41,15 +65,26 @@ import {
     DEFAULT_TELEMETRY,
     TIME_RANGES,
     PLAYBACK_SPEEDS,
-    TAG_MAPPINGS
+    TAG_MAPPINGS,
+    buildM5Groups
 } from '../data/telemetryData'
 import { useHistory } from '../hooks/useHistory'
 import { useMqtt } from '../hooks/useMqtt'
 import { useTopicDiscovery } from '../hooks/useTopicDiscovery'
+import { exportTelemetrySnapshot } from '../utils/exportUtils'
 
 const TelemetryDashboard = () => {
-    const { equipmentId } = useParams()
+    const { equipmentId, functionGroup } = useParams()
     const navigate = useNavigate()
+
+    const hasDynamicTags = !!dynamicTagsMap[equipmentId]
+    const equipmentTags = dynamicTagsMap[equipmentId] || []
+
+    // ─── Dynamic: build function groups from mapping files ───
+    const m5Groups = useMemo(
+        () => (hasDynamicTags ? buildM5Groups(equipmentTags) : []),
+        [equipmentId, hasDynamicTags]
+    )
     const isDarkMode = useStore((state) => state.isDarkMode)
 
     // Get equipment port from mock data
@@ -83,6 +118,10 @@ const TelemetryDashboard = () => {
     const [brokerUrl, setBrokerUrl] = useState('ws://localhost:8000/mqtt')
     const [showSettings, setShowSettings] = useState(false)
 
+    // State for export dropdown
+    const [showExportMenu, setShowExportMenu] = useState(false)
+    const exportMenuRef = useRef(null)
+
     // MQTT hook for live telemetry - useMock=false for real data with dynamic topic
     const { telemetry: mqttTelemetry, isConnected: mqttConnected, error: mqttError } = useMqtt(
         equipmentId,
@@ -109,7 +148,7 @@ const TelemetryDashboard = () => {
         const liveData = mqttTelemetry || discoveredData?.latestData
 
         if (liveData) {
-            console.log('[TelemetryDashboard] Received telemetry:', liveData)
+            console.log('[TelemetryDashboard] Received telemetry:', Object.keys(liveData).slice(0, 5))
             setTelemetry(prev => ({
                 ...prev,
                 ...liveData
@@ -141,6 +180,20 @@ const TelemetryDashboard = () => {
 
         loadHistory()
     }, [isHistoryMode, selectedTimeRange, fetchHistoricalData, equipmentId])
+
+    // Close export menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (exportMenuRef.current && !exportMenuRef.current.contains(event.target)) {
+                setShowExportMenu(false)
+            }
+        }
+
+        if (showExportMenu) {
+            document.addEventListener('mousedown', handleClickOutside)
+            return () => document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [showExportMenu])
 
     // Playback logic - same pattern as Angular's supension component
     useEffect(() => {
@@ -217,10 +270,50 @@ const TelemetryDashboard = () => {
         }
     }
 
+    // Build column list based on current view and export
+    const handleExport = (format) => {
+        let columns = []
+
+        // Dynamic tags + function group - export only that group
+        if (hasDynamicTags && functionGroup) {
+            const decodedFn = decodeURIComponent(functionGroup)
+            const groupTags = equipmentTags.filter(t => t.function_name === decodedFn)
+            columns = groupTags.map(tag => ({
+                key: tag.tag_id,
+                label: tag.description || tag.tag_id,
+                unit: tag.unit || ''
+            }))
+        }
+        // Dynamic tags - export all
+        else if (hasDynamicTags) {
+            columns = equipmentTags.map(tag => ({
+                key: tag.tag_id,
+                label: tag.description || tag.tag_id,
+                unit: tag.unit || ''
+            }))
+        }
+        // Generic equipment - flatten all widgets
+        else {
+            Object.entries(TELEMETRY_CATEGORIES).forEach(([, category]) => {
+                category.widgets.forEach(widget => {
+                    columns.push({
+                        key: widget.key,
+                        label: widget.label,
+                        unit: widget.unit || ''
+                    })
+                })
+            })
+        }
+
+        // Export current telemetry
+        exportTelemetrySnapshot(telemetry, equipmentId, { format, columns })
+        setShowExportMenu(false)
+    }
+
     // Icon mapping for all 19 categories
     const iconMap = {
         Weight, Droplets, Zap, Compass, Settings, Clock, Fuel, Thermometer, Power,
-        Gauge, AlertTriangle, Scale, ArrowUpDown, RotateCcw, MoveVertical, Truck, Cpu
+        Gauge, AlertTriangle, Scale, ArrowUpDown, RotateCcw, MoveVertical, Truck
     }
 
     // Get status color for value
@@ -403,32 +496,92 @@ const TelemetryDashboard = () => {
                         <ChevronLeft size={24} className={isDarkMode ? 'text-white' : 'text-gray-800'} />
                     </button>
 
-                    {/* Center - Mode Toggle */}
-                    <div className="flex items-center gap-2 bg-black/20 rounded-full p-1">
-                        <button
-                            onClick={() => toggleMode('live')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${!isHistoryMode
-                                ? 'bg-green-500 text-white'
-                                : 'text-gray-400 hover:text-white'
-                                }`}
-                        >
-                            <Radio size={16} className={!isHistoryMode ? 'animate-pulse' : ''} />
-                            LIVE
-                        </button>
-                        <button
-                            onClick={() => toggleMode('history')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${isHistoryMode
-                                ? 'bg-blue-500 text-white'
-                                : 'text-gray-400 hover:text-white'
-                                }`}
-                        >
-                            <History size={16} />
-                            HISTORY
-                        </button>
-                    </div>
+                    {/* Center - Group name (Dynamic Detail) or Mode Toggle */}
+                    {hasDynamicTags && functionGroup ? (
+                        <div className="flex flex-col items-center">
+                            <div className="text-[10px] text-gray-500 uppercase tracking-wider">{equipmentId}</div>
+                            <div className={`text-sm font-semibold truncate max-w-xs ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                                {decodeURIComponent(functionGroup)}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2 bg-black/20 rounded-full p-1">
+                            <button
+                                onClick={() => toggleMode('live')}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${!isHistoryMode
+                                    ? 'bg-green-500 text-white'
+                                    : 'text-gray-400 hover:text-white'
+                                    }`}
+                            >
+                                <Radio size={16} className={!isHistoryMode ? 'animate-pulse' : ''} />
+                                LIVE
+                            </button>
+                            <button
+                                onClick={() => toggleMode('history')}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${isHistoryMode
+                                    ? 'bg-blue-500 text-white'
+                                    : 'text-gray-400 hover:text-white'
+                                    }`}
+                            >
+                                <History size={16} />
+                                HISTORY
+                            </button>
+                        </div>
+                    )}
 
-                    {/* Right - Connection status & Time display */}
-                    <div className="text-right flex items-center gap-3">
+                    {/* Right - Export button, Connection status & Time display */}
+                    <div className="text-right flex items-center gap-3 relative">
+                        {/* Export Button */}
+                        <div className="relative" ref={exportMenuRef}>
+                            <button
+                                onClick={() => setShowExportMenu(!showExportMenu)}
+                                className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-colors ${isDarkMode
+                                    ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
+                                    : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
+                                    }`}
+                                title="Export current telemetry data as PDF, Excel, or CSV"
+                            >
+                                <Download size={14} />
+                                Export
+                            </button>
+
+                            {/* Export Dropdown Menu */}
+                            {showExportMenu && (
+                                <div className={`absolute right-0 mt-2 w-32 rounded-lg shadow-lg z-50 ${isDarkMode
+                                    ? 'bg-[#2a3555] border border-gray-600'
+                                    : 'bg-white border border-gray-200'
+                                    }`}>
+                                    <button
+                                        onClick={() => handleExport('pdf')}
+                                        className={`block w-full text-left px-4 py-2 text-sm rounded-t-lg transition-colors ${isDarkMode
+                                            ? 'hover:bg-blue-500/30 text-gray-200'
+                                            : 'hover:bg-blue-50 text-gray-800'
+                                            }`}
+                                    >
+                                        PDF
+                                    </button>
+                                    <button
+                                        onClick={() => handleExport('xlsx')}
+                                        className={`block w-full text-left px-4 py-2 text-sm border-t transition-colors ${isDarkMode
+                                            ? 'border-gray-600 hover:bg-blue-500/30 text-gray-200'
+                                            : 'border-gray-200 hover:bg-blue-50 text-gray-800'
+                                            }`}
+                                    >
+                                        Excel
+                                    </button>
+                                    <button
+                                        onClick={() => handleExport('csv')}
+                                        className={`block w-full text-left px-4 py-2 text-sm rounded-b-lg border-t transition-colors ${isDarkMode
+                                            ? 'border-gray-600 hover:bg-blue-500/30 text-gray-200'
+                                            : 'border-gray-200 hover:bg-blue-50 text-gray-800'
+                                            }`}
+                                    >
+                                        CSV
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
                         {/* MQTT Connection Status (only show in live mode) */}
                         {!isHistoryMode && (() => {
                             const isOnline = mqttConnected || isEquipmentOnline(equipmentId) || !!discoveredData
@@ -591,37 +744,145 @@ const TelemetryDashboard = () => {
                 )}
             </div>
 
-            {/* Dashboard Content */}
-            <div className="p-4 space-y-6">
-                {Object.entries(TELEMETRY_CATEGORIES).map(([categoryKey, category]) => {
-                    const IconComponent = iconMap[category.icon] || Settings
-
-                    return (
-                        <div key={categoryKey}>
-                            <h4 className={`text-xs font-semibold uppercase tracking-wider mb-4 flex items-center gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                                }`}>
-                                <IconComponent size={14} className={`text-${category.color}-500`} />
-                                {category.title}
-                            </h4>
-
-                            <div className={`grid gap-5 ${category.widgets[0]?.type === 'boolean'
-                                ? 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5'
-                                : 'grid-cols-2 md:grid-cols-4'
-                                }`}>
-                                {category.widgets.map(widget => (
-                                    <div
-                                        key={widget.key}
-                                        className={`p-5 rounded-xl flex flex-col items-center justify-center min-h-[160px] ${isDarkMode ? 'bg-[#2a3555]' : 'bg-white shadow-sm'
-                                            } ${widget.type === 'boolean' ? 'min-h-0 p-0' : ''}`}
+            {/* ─── Dynamic: Grouped function_name view ─── */}
+            {hasDynamicTags && !functionGroup && (
+                <div className="p-4">
+                    {m5Groups.length === 0 ? (
+                        <div className="p-8 flex flex-col items-center justify-center gap-3 text-center">
+                            <Wifi size={40} className="text-gray-600" />
+                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                Loading tag map for <span className="font-semibold">{equipmentId}</span>…
+                            </p>
+                        </div>
+                    ) : (
+                        <>
+                            <p className={`text-xs mb-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                {m5Groups.length} function groups · select a group to inspect its tags
+                            </p>
+                            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                                {m5Groups.map(([fn, tags]) => (
+                                    <Link
+                                        key={fn}
+                                        to={`/telemetry/${equipmentId}/${encodeURIComponent(fn)}`}
+                                        className={`flex items-center justify-between gap-3 px-5 py-4 rounded-xl transition-all
+                                            ${isDarkMode
+                                                ? 'bg-[#2a3555] hover:bg-[#334070] border border-transparent hover:border-blue-500/40'
+                                                : 'bg-white shadow-sm hover:shadow-md border border-transparent hover:border-blue-400/40'}
+                                        `}
                                     >
-                                        {renderWidget(widget, telemetry[widget.key])}
-                                    </div>
+                                        <div className="flex items-center gap-3 min-w-0">
+                                            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${mqttTelemetry ? 'bg-green-400 animate-pulse' : 'bg-gray-500'
+                                                }`} />
+                                            <span className={`text-sm font-medium truncate ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                                                {fn}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                            <span className="text-[11px] font-semibold bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">
+                                                {tags.length} tag{tags.length !== 1 ? 's' : ''}
+                                            </span>
+                                            <ChevronLeft size={16} className="text-gray-500 rotate-180" />
+                                        </div>
+                                    </Link>
                                 ))}
                             </div>
+                        </>
+                    )}
+                </div>
+            )}
+
+            {/* ─── Dynamic: Group detail view ─── */}
+            {hasDynamicTags && functionGroup && (() => {
+                const decodedFn = decodeURIComponent(functionGroup)
+                // Use mapping files: tag_id is the exact MQTT key, description is the label
+                const groupTags = equipmentTags.filter(t => t.function_name === decodedFn)
+                // Debug: show what we're looking up
+                console.log(`[${equipmentId} Detail]`, decodedFn, 'tags:', groupTags.slice(0, 3).map(t => t.tag_id),
+                    'telemetry sample:', groupTags.slice(0, 3).map(t => [t.tag_id, telemetry[t.tag_id]]))
+
+                const isCalage = decodedFn.toLowerCase().includes('calage')
+
+                return (
+                    <div className="p-4">
+                        <h4 className={`text-xs font-semibold uppercase tracking-wider mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {decodedFn}
+                        </h4>
+
+                        {/* Chassis diagram — shown only for Calage function group */}
+                        {isCalage && (
+                            <div className={`mb-8 rounded-2xl p-6 flex justify-center ${isDarkMode ? 'bg-[#1a2035]' : 'bg-gray-50 border border-gray-200'}`}>
+                                <img
+                                    src="/chassis.svg"
+                                    alt="Chassis diagram"
+                                    className="w-full max-w-4xl h-auto object-contain"
+                                    style={{ maxHeight: '500px' }}
+                                />
+                            </div>
+                        )}
+
+                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {groupTags.map((tag, i) => {
+                                // tag.tag_id IS the MQTT key — lookup from accumulated telemetry state
+                                const rawVal = telemetry[tag.tag_id]
+                                const hasValue = rawVal !== undefined && rawVal !== null
+                                return (
+                                    <div
+                                        key={`${tag.tag_id}-${i}`}
+                                        className={`p-4 rounded-xl ${isDarkMode ? 'bg-[#2a3555]' : 'bg-white shadow-sm'}`}
+                                    >
+                                        <div
+                                            className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1 truncate"
+                                            title={tag.tag_id}
+                                        >
+                                            {tag.description || tag.tag_id}
+                                        </div>
+                                        <div className={`text-2xl font-bold font-mono mt-1 ${hasValue ? (isDarkMode ? 'text-white' : 'text-gray-800') : 'text-gray-600'}`}>
+                                            {hasValue
+                                                ? (typeof rawVal === 'number' ? rawVal.toFixed(2) : String(rawVal))
+                                                : '–'}
+                                            {tag.unit && <span className="text-sm font-medium text-gray-400 ml-1">{tag.unit}</span>}
+                                        </div>
+                                    </div>
+                                )
+                            })}
                         </div>
-                    )
-                })}
-            </div>
+                    </div>
+                )
+            })()}
+
+            {/* ─── Generic equipment: original category grid ─── */}
+            {!hasDynamicTags && (
+                <div className="p-4 space-y-6">
+                    {Object.entries(TELEMETRY_CATEGORIES).map(([categoryKey, category]) => {
+                        const IconComponent = iconMap[category.icon] || Settings
+
+                        return (
+                            <div key={categoryKey}>
+                                <h4 className={`text-xs font-semibold uppercase tracking-wider mb-4 flex items-center gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                                    }`}>
+                                    <IconComponent size={14} className={`text-${category.color}-500`} />
+                                    {category.title}
+                                </h4>
+
+                                <div className={`grid gap-5 ${category.widgets[0]?.type === 'boolean'
+                                    ? 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5'
+                                    : 'grid-cols-2 md:grid-cols-4'
+                                    }`}>
+                                    {category.widgets.map(widget => (
+                                        <div
+                                            key={widget.key}
+                                            className={`p-5 rounded-xl flex flex-col items-center justify-center min-h-[160px] ${isDarkMode ? 'bg-[#2a3555]' : 'bg-white shadow-sm'
+                                                } ${widget.type === 'boolean' ? 'min-h-0 p-0' : ''}`}
+                                        >
+                                            {renderWidget(widget, telemetry[widget.key])}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            )}
         </div>
     )
 }

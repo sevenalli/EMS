@@ -3,14 +3,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
     Bell, AlertOctagon, AlertTriangle, XCircle, Info,
     ChevronLeft, Search, Filter, Zap, Mail, CheckCheck, Trash2,
-    RefreshCw, Wifi, History, Calendar, Play, Pause, SkipBack, SkipForward
+    RefreshCw, Wifi, History, Calendar, Play, Pause, SkipBack, SkipForward,
+    Download, FileText, Volume2, VolumeX
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { NOTIFICATION_TAGS, NOTIFICATION_CATEGORIES, TYPE_COLORS, NOTIFICATION_TAG_MAP } from '../data/notificationTags';
 import { TAG_MAPPINGS, TIME_RANGES, PLAYBACK_SPEEDS } from '../data/telemetryData';
 import { useMqtt } from '../hooks/useMqtt';
 import { useTopicDiscovery } from '../hooks/useTopicDiscovery';
 import { useHistory } from '../hooks/useHistory';
 import { useStore, mockData } from '../store/store';
+import { exportNotifications } from '../utils/exportUtils';
+import { playNotificationSound, requestNotificationPermission, toggleMute, isMuted } from '../utils/audioNotifications';
 
 // Generate unique ID
 const generateId = () => {
@@ -35,6 +39,7 @@ const TypeIcon = ({ type, size = 20 }) => {
 
 function Notifications() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const { equipmentId } = useParams(); // Optional equipment filter
     const isDarkMode = useStore((state) => state.isDarkMode);
 
@@ -44,6 +49,14 @@ function Notifications() {
 
     // Dynamic topic: specific equipment or wildcard for all
     const dynamicTopic = equipmentId ? `${portId}/${equipmentId}` : '+/+';
+
+    // Audio notification state
+    const [audioMuted, setAudioMuted] = useState(() => isMuted());
+
+    // Request notification permission on mount
+    useEffect(() => {
+        requestNotificationPermission();
+    }, []);
 
     // State
     const [notifications, setNotifications] = useState([]);

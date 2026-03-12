@@ -1,0 +1,5046 @@
+[
+    {
+        "tag_id": "puissanceActive",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Puissance en kW",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 0,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceMesuree",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Puissance mesurée en kW",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 4,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceMesuree",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Puissance mesurée en kW INT",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 8,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Tension de sortie Simoreg",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 10,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantReel",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Valeur réelle de base pour la puissa nce",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 14,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempAlternateur1",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Alternateur: valeur de température 1 PT100",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 18,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempAlternateur2",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Alternateur: valeur de température 2 PT100",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 22,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempAirTurbo",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Temperaturmessung E-Raum",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1456,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionBusDC",
+        "function_name": "Unité d'alimentation",
+        "description": "Unité d'alimentation 1: tension circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 26,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionBusDC",
+        "function_name": "Unité d'alimentation",
+        "description": "Unité d'alimentation 1: courant circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 30,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Unité d'alimentation",
+        "description": "Unité d'alimentation 2: tension circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 34,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Unité d'alimentation",
+        "description": "Unité d'alimentation 2: courant circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 38,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceMesuree",
+        "function_name": "Unité d'alimentation",
+        "description": "Puissance active mesurée en kW à par tir du Simoreg",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 42,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionReseauFreinage",
+        "function_name": "Unité d'alimentation",
+        "description": "Valeur réelle du courant Simoreg de freinage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 46,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionReseau",
+        "function_name": "Unité d'alimentation",
+        "description": "Conversion actuelle tension du réseau",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 50,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionReseauFreinage",
+        "function_name": "Unité d'alimentation",
+        "description": "Tension réseau du simoreg de freinage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 54,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "frequenceReseau",
+        "function_name": "Unité d'alimentation",
+        "description": "Fréquence de réseau",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 58,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceActive",
+        "function_name": "Unité d'alimentation",
+        "description": "Valeur réelle de puissance des Ultra Caps",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 62,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceActive",
+        "function_name": "Unité d'alimentation",
+        "description": "Valeur réelle de puissance alternate ur",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 66,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Unité d'alimentation",
+        "description": "Charge du convertisseur",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 70,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Unité d'alimentation",
+        "description": "Tension des Caps",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 74,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Unité d'alimentation",
+        "description": "Etat de charge des Caps",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 78,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consignePompe",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur de consigne réduite pour pomp e hydraulique",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 82,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantMoteur",
+        "function_name": "Pompes et compresseurs",
+        "description": "Générateur de rampe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 86,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consignePompe",
+        "function_name": "Pompes et compresseurs",
+        "description": "\"Val. consigne pompe hydr  réduite, mode mise en équipem.: relever/poser flèche\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 90,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consignePompe",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur de consigne pompe hydraulique",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 94,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempHydraulique",
+        "function_name": "Pompes et compresseurs",
+        "description": "Température du système hydraulique",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 98,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionPompe",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur réelle pression de pompe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 102,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "anglePivotPompe",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur réelle angle de pivotement po mpe 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 106,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "anglePivotPompe2",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur réelle angle de pivotement po mpe 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 110,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "anglePivotPompe3",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur réelle angle de pivotement po mpe 3",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 114,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "anglePivotPompe4",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur réelle angle de pivotement po mpe 4",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 118,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionPompe",
+        "function_name": "Pompes et compresseurs",
+        "description": "Valeur réelle pression de la pompe d e direction",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1240,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Pompes et compresseurs",
+        "description": "Istwert aktuelle Leistung Pumpen P1+ P2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1442,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Pompes et compresseurs",
+        "description": "Istwert aktuelle Leistung Pumpen P3+ P4",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1446,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "niveauCarburant",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Réservoir de carburant diesel: nivea u de remplissage en %",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 122,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempAirTurbo",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Température moteur diesel air de sur alimentation",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 126,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionCapteurFondM2",
+        "function_name": "Groupe électrogène diesel",
+        "description": "VAR: valeur réelle surveillance de p ression du filtre",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 130,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempEauRadiateur",
+        "function_name": "Groupe électrogène diesel",
+        "description": "Température moteur diesel radiateur à eau",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 134,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hauteur de levage admissible pour le levage calculée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 138,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hauteur de levage admissible calculé e pour la descente",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 142,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hauteur de levage admissible en pour centage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 146,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Montée: présélection hauteur de leva ge point final 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 150,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Descente: sélection hauteur de levag e point cible 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 154,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Montée: présélection hauteur de leva ge point final 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 158,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Descente: sélection hauteur de levag e point cible 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 162,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Limitation de la hauteur de levage : limitation levage  en pourcentage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 166,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Limitation de la hauteur de levage : limitation descente  en pourcentage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 170,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 174,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 178,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMaxiPeripherie",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Réduire valeur de consigne vitesse p our réduction puissance",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 182,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneVitesseRotationCharge",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Calculer valeur consigne vitesse rot ation du méc. levage suivant la char ge",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 186,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Appliquer val. pré-fin de course et val. cons. commande par à-coups",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 190,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Impulsion changement de vitesse rédu cteur du méc. de levage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 194,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Impulsion de démarrage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 198,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "abaissementCalculerPorteeAdm",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Montée / descente jusqu’au point cib le valeur de consigne réduite",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 202,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Transmission de consigne à l'entraîn ement en %",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 206,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurLevage",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Temps réelle de générateur de rampe %",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 210,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMecLevage",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Vitesse du méc. levage en m/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 214,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle vitesse en t/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 218,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantReel",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle du courant en A",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 222,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceMesuree",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle de la puissance en kW",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 226,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle tension moteur en V",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 230,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle de la fréquence secteu r en Hz",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 234,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle de la tension d'induit en V",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 238,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrientation",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle de température du mote ur en °C",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 242,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmissible",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hauteur de levage admissible en m",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 246,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevage",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle de la hauteur de levag e en m (codeur absolu)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 250,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur réelle de la hauteur de levag e en m (entraînement)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 254,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseLevageAdmissible",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Méc. levage: vitesse admissible en m /min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 258,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinFermeture",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Pression de service pour le frein du méc. de levage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 262,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckDrehwerk1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Force de traction benne pour mécanis me de fermeture",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 266,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseLevageAdmissible",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Méc. levage: vitesse admissible en m /min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 270,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMecLevage",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Méc. levage: accélération en m/min2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 274,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplFreinRapide",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Test de fin de course activé",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 278,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tempHuileReducteur",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Méc. levage 1: température de l'huil e du réducteur",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 280,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmissible",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hauteur de levage: écart sécurité su ppl. à la tête de flèche stationer g rue",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 284,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hauteur de levage: écart de sécurité actuel à la tête de flèche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 288,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur de consigne régulation mou de câble transmise á l'entraînement",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 292,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurLevage",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Méc. levage 1: température du moteur en degrés Celsius",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 296,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Puissance nécessaire en charge à Vad mis.",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 300,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Couple nécessaire en charge à Vadmis .",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 304,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBrutePorteeMetres",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Couple nécessaire en % en charge ave c Vadmis.",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 308,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseLevageAdmTMin",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Mécanisme de levage: vitesse admissi ble en t/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 312,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipLevage",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Valeur de consigne manipulateur pour levage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 316,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionCapteurTigeM3",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Manipulateur méc. levage 1: valeur b rute de la valeur de consigne",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 320,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "getriebeStufeIII",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Charge du module moteur en pourcenta ge",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1228,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hauteur de levage valeur réelle en m (codeur absolu) calcul 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1244,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "\"Méc. levage 1: levage: hauteur de le vage admiss., calcul 1\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1252,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "\"Méc. levage 1: descente: hauteur de levage admiss., calcul 1\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1256,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "\"Méc. levage 1: levage: hauteur de le vage admiss., calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1276,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "\"Méc. levage 1: descente: hauteur de levage admiss., calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1280,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBrute",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Schnelle Lasterfassung",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1430,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "lastmessbolzenDMS1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "Hubwerk: Aktuelle Nenndrehzahl",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1452,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckHW1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "HW1:Drehmomentistwert",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1460,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckHW1",
+        "function_name": "Méc. levage 1 / Méc. retenue",
+        "description": "HW1:Vorsteuermoment geschaltet",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1464,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 322,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 326,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneFixeOrientDroite",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Transmission de consigne à l'entraîn ement en %",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 330,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Impulsion changement de vitesse rédu cteur du méc. de levage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 334,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Sortie régulateur compensation de co urant",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 338,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Hauteur de levage admissible pour le levage calculée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 342,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Hauteur de levage admissible calculé e pour la descente",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 346,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Hauteur de levage admissible en pour centage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 350,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle vitesse en t/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 354,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantReel",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle du courant en A",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 358,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceMesuree",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle de la puissance en kW",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 362,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle de la tension d'induit en V",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 366,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle de la fréquence secteu r en Hz",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 370,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrientation",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle de température du mote ur en °C",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 374,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevage",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle de la hauteur de levag e en m (codeur absolu)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 378,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur réelle de la hauteur de levag e en m (entraînement)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 382,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMecLevage",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Vitesse du méc. levage en m/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 386,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinFermeture",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Pression de service pour le frein du méc. de fermeture",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 390,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipVolee",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur de consigne mode mise en équi pement",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 394,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrient2",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Méc. levage 2: température de l'huil e du réducteur",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 398,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "coupleCharge",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Poids propre de la benne à quatre câ bles",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 402,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Charge max. pour l'atténuation du ch amp",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 406,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Sortie régulateur de compensation du courant",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 410,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Différence de position entre méc. de levage 1 et méc. de levage 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 414,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consignePompeTranslRapideYminN",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Course de fermeture de la benne en p ourcentage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 418,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consignePompe",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Sortie régulateur de course",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 422,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipFermeture",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Sortie régulateur de course limitée par le manipulateur",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 426,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipLevage",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur de consigne venant du manipul ateur",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 430,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionBusDC",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Courant maximal pour atténuation du champ",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 438,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "temperatureMoteur",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Température du moteur en degrés Cels ius",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 442,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipFermeture",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Valeur de consigne manipulateur pour fermeture",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 446,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionCapteurTigeM3",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Manipulateur méc. levage 2: valeur b rute de la valeur de consigne",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 450,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "Hauteur de levage valeur réelle en m (codeur absolu) calcul 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1248,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "\"Mécanisme de levage 2: levage: haute ur de levage admiss., calcul 1\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1260,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "\"Mécanisme de levage 2: descente: hau teur de levage admiss., calcul 1\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1264,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "\"Mécanisme de levage 2: levage: haute ur de levage admiss., calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1284,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc2",
+        "function_name": "Méc. levage 2 / Méc. fermeture",
+        "description": "\"Mécanisme de levage 2: descente: hau teur de levage admiss., calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1288,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Temps d’accélération de consigne en secondes",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 452,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Temps d’accélération de consigne en secondes arrondi en chiffres entiers",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 456,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 460,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 464,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Portée min. pour temps d’accélératio n en m",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 468,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneVitesseOrientPortee",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Calculer val. consigne vitesse du mé c. orientation suivant la portée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 472,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Transmission de consigne à l'entraîn ement en %",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 476,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckDrehwerk1",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Pression de service du frein d’orien tation 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 480,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinOrientation2",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Pression de service du frein d’orien tation 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 484,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinOrientation3",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Pression de service du frein d’orien tation 3",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 488,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckDrehwerk1",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Pression de service du frein d’orien tation 4",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 492,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Valeur réelle vitesse en t/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 496,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantReel",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Valeur réelle du courant en A",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 500,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "puissanceActive",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Puissance en kW",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 504,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Valeur réelle de tension de moteur e n V",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 508,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Valeur réelle de température du mote ur en °C",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 512,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "angleOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Angle d'orientation superstructure c hâssis: valeur réelle",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 516,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "levageCoupleAccelMoyen",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Temps d'accélération effectif en sec .",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 520,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "angleOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Angle d'orientation superstructure / châssis (codeur)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 524,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneVitesseMoteur",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Valeur de consigne vitesse moteur",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 528,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMaxiGrue",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Vitesse maxi de la grue en tr/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 532,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Vitesse maxi superstructure réduite pour le service crochet",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 536,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "vitesseMaxiPeripherie",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Vitesse maxi superstructure réduite pour le service spreader",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 536,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Vitesse maxi superstructure réduite pour le service benne à quatre câble s",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 536,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "vitesseMaxiPeripherie",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Vitesse maxi à la périphérie en m/mi n réduite",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 538,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Vitesse d'orientation maxi en tr/min réduite",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 542,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Méc.orient.1: température du moteur en degrés Celsius",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 546,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrient2",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Méc.orient.2: température du moteur en degrés Celsius",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 550,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Méc.orient.3: température du moteur en degrés Celsius",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 554,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Méc.orient.4: température du moteur en degrés Celsius",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 558,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMecLevage",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Vitesse périphérique actuelle en m/ min.",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 562,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantMoteur",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Courant d’induit moteur d'orientatio n 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 566,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurOrient2",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Courant d’induit moteur d'orientatio n 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 570,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantMoteur",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Courant d’induit moteur d'orientatio n 3",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 574,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Valeur de consigne manipulateur pour orientation",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 578,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipOrientation",
+        "function_name": "Mécanisme d'orientation",
+        "description": "Manipulateur méc. d'orientation: val eur brute de la valeur de consigne",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 582,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Méc. de volée: valeur de consigne de vitesse",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 584,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "calageAngleY",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Trans. consigne du méc. var. volée à la soupape proport. du cyl. de var. volée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 588,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCalculerPorteeAdm",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Relevage flèche: calculer la portée admissible",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 592,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "abaissementCalculerPorteeAdm",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Abaissement flèche: calculer la port ée admissible",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 596,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "abaissementCalculerPorteeAdm",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Abaissement flèche pour la visualisa tion: calculer la portée admissible",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 600,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmissible",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Portée admissible en pourcentage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 604,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 608,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 612,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Calculer la valeur de consigne en fo nction de la portée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 616,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Réduction valeur de consigne de la s oupape d’étranglement du méc. de vol ée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 620,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Valeur de consigne vitesse pré-fin d e course",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 624,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Générateur de rampe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 628,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseLevageAdmissible",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Vitesse admissible pour relevage de la flèche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 632,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMaxiPeripherie",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Vitesse admissible pour abaissement de la flèche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 636,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseReelleCylindre",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Vitesse réelle du cylindre de variat ion de volée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 640,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseReelleCylindre",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Valeur réelle course de la soupape p roportionnelle",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 644,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantReel",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Ecart valeur réelle/valeur de consig ne de la soupape proport. du méc.vol ée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 648,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeCodeurAbsolu",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Portée en mètres (codeur absolu)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 652,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseLevageAdmissible",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Vitesse admissible pour relevage de la flèche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 656,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMaxiPeripherie",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Vitesse admissible pour abaissement de la flèche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 660,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipVolee",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Valeur de consigne manipulateur pour volée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 664,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipVolee",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Manipulateur méc. variation de volée : valeur brute de la valeur de consi gne",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 668,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "pressionVoleeTige",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Pression méc. de volée côté fond",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 670,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinLevage",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Pression méc. de volée côté tige",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 674,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc2",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "\"Portée admissible relevage flèche sa ns limitation, calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1232,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc2",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "\"Portée admissible abaissement flèche sans limitation, calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1236,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelLent",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Méc. var. volée: vitesse de variatio n de volée actuelle",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1300,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Méc. var. volée: vitesse de variatio n de volée actuelle",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1304,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "getriebeStufeI",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Wippwerk: Position der Begrenzung ei nwippen",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1434,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "angleOrientation",
+        "function_name": "Méc. variation de volée hydraul.",
+        "description": "Wippwerk: Position der Begrenzung au swippen",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1438,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneTranslation",
+        "function_name": "Méc. translation électrique",
+        "description": "Translation: valeur de consigne",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 678,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "frequenceReseau",
+        "function_name": "Méc. translation électrique",
+        "description": "Consigne de fréquence en Hz",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 682,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Méc. translation électrique",
+        "description": "Valeur réelle vitesse en t/min",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 686,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Méc. translation électrique",
+        "description": "Valeur réelle de vitesse en m/ min.",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 690,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantReel",
+        "function_name": "Méc. translation électrique",
+        "description": "Valeur réelle du courant en A",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 694,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionBusDC",
+        "function_name": "Méc. translation électrique",
+        "description": "Tension du circuit intermédiaire en V",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 698,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionMoteur",
+        "function_name": "Méc. translation électrique",
+        "description": "Tension de sortie en V",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 702,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "translationValeurConsigne",
+        "function_name": "Méc. translation électrique",
+        "description": "Position réelle méc. translation",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 706,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Méc. translation électrique",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 710,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Méc. translation électrique",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 714,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "translationValeurConsigne",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Valeur de consigne translation",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 718,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneTranslation",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Translation . entrée de la valeur de consigne générateur de rampe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 722,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckDrehwerk1",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Valeur de consigne freinage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 726,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckDrehwerk1",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Valeur de consigne freinage avant gé nérateur de rampe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 730,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Ordre: lire et adapter val. consigne pour manipulateur transl. cab. de t our",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 734,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Ordre: lire et adapter val. consigne pour manipulateur transl. cab. cond uite",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 738,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Activer pré-fin de course",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 742,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Activer pré-fin de course",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 746,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 750,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 754,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelRapide",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Activer pré-fin de course",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 758,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinLevage",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Interrupteur à pression du frein de service",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 762,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionVolee",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Interrupteur à pression de l’accumul ateur de pression",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 766,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinLevage",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Interrupteur à pression du frein de stationnement",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 770,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinFermeture",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Pression frein de stationnement port ique gauche (GHRK)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1398,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckDrehwerk1",
+        "function_name": "Méc. translation méc.-hydraul.",
+        "description": "Pression frein de stationnement port ique droit (GHRK)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1402,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantMoteur",
+        "function_name": "Système de direction",
+        "description": "Transmission de consigne pour l’entr ée du générateur de rampe de directi on",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 774,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Système de direction",
+        "description": "Transmission de consigne pour la dir ection",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 778,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Système de direction",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 782,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "relevageCouplAccelMoyen",
+        "function_name": "Système de direction",
+        "description": "Ordre: lire et adapter valeur de con signe",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 786,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipFermeture",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Valeur de comptage commande de démar rage enrouleur à câble flèche pour redémar.",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 792,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc1",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "_53_Res_int1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 794,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "consigneVitesseMoteur",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Valeur de consigne de vitesse calcul ée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 800,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc1",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Différence valeur réelle n / valeur de consigne n",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 804,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "coupleEntrainement",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Valeur réelle du couple venant de l' entraînement",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 808,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courantApparent",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Courant apparent",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 812,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc1",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Valeur antérieure opérateur PT1 : li ssage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 816,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionBusDC",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Unité d'alimentation 1: tension circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 820,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionBusDC",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Unité d'alimentation 1: courant circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 824,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Unité d'alimentation 2: tension circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 828,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Unité d'alimentation 2: courant circ uit intermédiaire",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 832,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc1",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "_53_INF_Res_1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 836,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "getriebeStufeI",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "_53_INF_Res_3",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 844,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "temperatureMoteur",
+        "function_name": "Enrouleur à câble de flèche",
+        "description": "Température du moteur en degrés Cels ius",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 852,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "calageAngleY",
+        "function_name": "Equipements de sécurité",
+        "description": "Calage: angle de l’axe X",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 860,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "calageAngleY",
+        "function_name": "Equipements de sécurité",
+        "description": "Calage: angle de l’axe Y",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 864,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "calageAngleY",
+        "function_name": "Equipements de sécurité",
+        "description": "Calage: angle de l’axe X",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 868,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "calageAngleY",
+        "function_name": "Equipements de sécurité",
+        "description": "Calage: angle de l’axe Y",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 872,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBrutePorteeMetres",
+        "function_name": "Equipements de sécurité",
+        "description": "Lissage charge brute",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 876,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Equipements de sécurité",
+        "description": "Lissage de la portée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 880,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Equipements de sécurité",
+        "description": "Position de la flèche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 884,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "angleOrientation",
+        "function_name": "Equipements de sécurité",
+        "description": "Portée calculée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 888,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseVent",
+        "function_name": "Equipements de sécurité",
+        "description": "Vitesse du vent valeur réelle",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 892,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "twistlockDroit",
+        "function_name": "Equipements de sécurité",
+        "description": "Superstructure en position brochage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 896,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "angleOrientation",
+        "function_name": "Equipements de sécurité",
+        "description": "Superstructure en position 180°",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 896,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté fond avant gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1308,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté tige avant gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1312,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté fond avant droit",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1316,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté tige avant droit",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1320,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté fond arrière droite",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1324,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté tige arrière droit",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1328,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté fond arrière gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1332,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe1",
+        "function_name": "Calage",
+        "description": "Pression 1 côté tige arrière gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1336,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionNiveau2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté fond avant gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1340,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté tige avant gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1344,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionNiveau2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté fond avant droit",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1348,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté tige avant droit",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1352,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionNiveau2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté fond arrière droite",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1356,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté tige arrière droit",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1360,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionNiveau2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté fond arrière gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1364,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "sollwertDruckLenkpumpe2",
+        "function_name": "Calage",
+        "description": "Pression 2 côté tige arrière gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1368,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "stabilisateurAVG",
+        "function_name": "Calage",
+        "description": "Force avant gauche [t]",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1410,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "betriebsdruckDrehwerk1",
+        "function_name": "Calage",
+        "description": "Force avant droite [t]",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1414,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinOrientation",
+        "function_name": "Calage",
+        "description": "Force arrière droite [t]",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1418,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "pressionFreinOrientation",
+        "function_name": "Calage",
+        "description": "Force arrière gauche [t]",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1422,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseLevageAdmTMin",
+        "function_name": "Calage",
+        "description": "Force [t]",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1426,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "getriebeStufeII",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Géométrie de la grue: rayon actuel d istance de sécurité",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 898,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBrute",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute en tonnes",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 902,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "coupleCharge",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Tare de la charge en tonnes",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 906,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeNette",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge nette en tonnes",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 910,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS1",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 1 jauge DMS 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 914,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 1 jauge DMS 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 918,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDiffDMS12",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 1: différen ce jauges DMS 1 + 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 922,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteAdmissible",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute en tonnes admissible",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 926,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBrutePorteeMetres",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute en tonnes en portée + x-mètres",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 930,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeNetteAdmissible",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Portée: régime admissible en fonctio n de la charge",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 934,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeMetres",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Portée_en mètres",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 938,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeNetteAdmissible",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge nette admissible en tonnes",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 942,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteRelative",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute relative",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 946,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "coupleCharge",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Couple de charge en mètres x tonnes (portée x charge)",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 950,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "courbeCharge",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Courbe sélectionnée",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 954,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Numéro courbe de charge: test CEC",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 956,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Compteur spectre de charge du méc. l evage",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 958,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 2 jauge DMS 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 962,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 2 jauge DMS 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 966,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteLevage2DiffDMS12",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 2: différen ce jauges DMS 1 + 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 970,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipVolee",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "CEC: code de défaut",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 990,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "abaissementCalculerPorteeAdm",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "CEC: différence de portée pour le ca pteur d'angle SSI",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 992,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: hauteur d e levage actuelle\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 996,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalculee",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: hauteur d e levage admissible\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1000,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tempMoteurLevage",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: hauteur d e levage en %\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1004,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: portée ac tuelle\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1008,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "modeSLI",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: portée ad missible\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1012,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: portée en %\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1016,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: charge ac tuelle\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1020,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: charge ad missible\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1024,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "\"Indicateur CEC, mode test: charge en %\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1028,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS1",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 1 jauge DMS 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1372,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 1 jauge DMS 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1376,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 2 jauge DMS 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1380,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Charge brute méc. levage 2 jauge DMS 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1384,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "consigneManipLevage",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Valeur actuelle de la force de levag e de la benne à quatre câbles",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 974,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "chargeBruteDMS1",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Capacité de charge valeur benne à 4 câbles 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 976,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Capacité de charge valeur benne à 4 câbles 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 978,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "chargeBruteDMS2",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Capacité de charge valeur benne à 4 câbles 3",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 980,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Capacité de charge valeur benne à 4 câbles 4",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 982,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Capacité de charge valeur benne à 4 câbles 5",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 984,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Capacité de charge valeur benne à 4 câbles 6",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 986,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Validation global affichage capacité de charge pour la benne à 4 câbles",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 988,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Validation affichage capacité de cha rge pour la benne à quatre câbles 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 988,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Validation affichage capacité de cha rge pour la benne à quatre câbles 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 988,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Validation affichage capacité de cha rge pour la benne à quatre câbles 3",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 988,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Validation affichage capacité de cha rge pour la benne à quatre câbles 4",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 988,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Validation affichage capacité de cha rge pour la benne à quatre câbles 5",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 988,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "Contrôleur d'état de charge",
+        "description": "Validation affichage capacité de cha rge pour la benne à quatre câbles 6",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 988,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "chargeBrutePorteeMetres",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "\"Facteur dépendant des unités pour po rtée/hauteur de levage m = 1, ft = 3 .2808\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1032,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "\"Facteur dépendant des unités pour ch arge, t = 1, sht = 1.1023\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1036,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseVent",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "\"Facteur dépendant des unités pour vi tesse du vent m/S = 1, miles/h = 2.2 369\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1040,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "hauteurLevageAdmCalc1",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "Code moyens préh:1e pos 0=croch1=spr 2=twi3=benne4=b4c5=spéc6=palon7=poly 8=coqu",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1044,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "twinliftConnected",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "Code moyen de préhension: 2ème mot s électionné par le grutier",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1046,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "compteurSpectre",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "Tare pour la visualisation",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1048,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "vitesseReelleCylindre",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "Date et heure indiquées en format St ring",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1052,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 24 ]"
+    },
+    {
+        "tag_id": "vitesseReelleCylindre",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "Date indiquée en format String",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1078,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 24 ]"
+    },
+    {
+        "tag_id": "heuresService",
+        "function_name": "Commande centralisée CPU programmable",
+        "description": "Heure indiquée en format String",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1104,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 24 ]"
+    },
+    {
+        "tag_id": "kranHauptschalter",
+        "function_name": "Commandes numériques",
+        "description": "État du firmware actuel CU1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1406,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "DINT"
+    },
+    {
+        "tag_id": "vitesseOrientation",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Adaptation de la vitesse du manipula teur : valeurs mini mémorisées",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1130,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "consigneVitesseMoteur",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Adaptation de la vitesse du manipula teur : valeurs par défaut mémorisées",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1130,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "vitesseMaxiPeripherie",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Adaptation de la vitesse du manipula teur : valeurs maxi mémorisées",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1130,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "consigneManipVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Position du string de recherche dans la désignation de la grue",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1138,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "consigneSoupapeTranslRapideYminN",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Mémoire pour le string de recherche du type de grue",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1142,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 5 ]"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Index quand le type de grue est erro né",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1174,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "vitesseMaxiGrue",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Index actuel pour le type de grue",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1182,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "tempsAcceleration",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Temps de cycle précédent",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1184,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Salle électrique 0",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Salle électrique 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Salle électrique 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Control Unit",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "getriebeStufeI",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Mécanisme de levage 1 + 2 + mécanism e d'orientation",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Entraînement méc. levage 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Résistance freinage 1",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Entraînement méc. levage 2",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1188,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "translationValeurConsigne",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Entraînement méc. translation électr ique",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Réserve",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Réserve",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Entraînement mécanisme d'orientation",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Cabine de tour",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Système anti-ballant",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Châssis",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Réserve",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1189,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Réserve",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Réserve",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "vitesseTambour",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Tambour à câble",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionBusDC",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Bus ASI superstructure",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Passerelle CAN superstructure",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Passerelle CAN PowerCaps",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "CPU CEC",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Salle électrique Safety",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1190,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Radiotélécommande",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Passerelle CAN châssis",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "EKS cabine de tour",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "niveauCarburant",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "EKS superstructure",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Réserve",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Manipulateur à droite",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "tensionCable",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Manipulateur à gauche",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "porteeCodeurAbsolu",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "11_P_B21 Absolute encoder",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1191,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "porteeCodeurAbsolu",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "12_P_B21 Absolute encoder",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1192,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "reductionConsigneEtranglementVolee",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Réserve",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1192,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    },
+    {
+        "tag_id": "vitesseMaxiGrue",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Classe de grue en format String",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1194,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 1 ]"
+    },
+    {
+        "tag_id": "vitesseMaxiGrue",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Classe de grue en format Integer",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1198,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "consigneManipLevage",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Taille du mécanisme de levage exprim ée en format String",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1200,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 1 ]"
+    },
+    {
+        "tag_id": "hauteurLevage",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Taille du mécanisme de levage exprim ée en format Integer",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1204,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Nombre d'essieux exprimé en format S tring",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1206,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 2 ]"
+    },
+    {
+        "tag_id": "vitesseMoteurReelle",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Nombre d'essieux exprimé en format I nteger",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1210,
+            "bit": 0,
+            "byte_size": 2
+        },
+        "simple_type": "INT"
+    },
+    {
+        "tag_id": "translationValeurConsigne",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Type d'exécution de la grue exprimé en format String",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1212,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "STRING [ 1 ]"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc1",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "\"Portée admissible relevage flèche sa ns limitation, calcul 1\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1268,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc1",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "\"Portée admissible abaissement flèche sans limitation, calcul 1\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1272,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc2",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "\"Portée admissible relevage flèche sa ns limitation, calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1292,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "porteeAdmRelevageCalc2",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "\"Portée admissible abaissement flèche sans limitation, calcul 2\"",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1296,
+            "bit": 0,
+            "byte_size": 4
+        },
+        "simple_type": "REAL"
+    },
+    {
+        "tag_id": "rapportTransmissionRapide",
+        "function_name": "SYS — Système & Configuration PLC",
+        "description": "Abgestützt mit 40t",
+        "address": {
+            "area": 132,
+            "db_number": 102,
+            "offset": 1450,
+            "bit": 0,
+            "byte_size": 1
+        },
+        "simple_type": "BOOL"
+    }
+]

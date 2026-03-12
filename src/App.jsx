@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard'
 import EquipmentMonitoring from './pages/EquipmentMonitoring'
 import TelemetryDashboard from './pages/TelemetryDashboard'
 import Notifications from './pages/Notifications'
+import MapView from './pages/MapView'
+import AdminInventory from './pages/AdminInventory'
 import { useStore } from './store/store'
 
 import ThemeToggle from './components/ThemeToggle'
@@ -16,10 +18,11 @@ function App() {
     const isDarkMode = useStore((state) => state.isDarkMode)
     const location = useLocation()
 
-    // Hide header on monitoring, telemetry and notifications pages for full-screen experience
+    // Hide header on monitoring, telemetry, notifications, and map pages for full-screen experience
     const hideHeader = location.pathname.startsWith('/monitoring/') ||
         location.pathname.startsWith('/telemetry/') ||
-        location.pathname === '/notifications'
+        location.pathname === '/notifications' ||
+        location.pathname === '/map'
 
     useEffect(() => {
         if (isDarkMode) {
@@ -40,7 +43,10 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/monitoring/:equipmentId" element={<EquipmentMonitoring />} />
                     <Route path="/telemetry/:equipmentId" element={<TelemetryDashboard />} />
+                    <Route path="/telemetry/:equipmentId/:functionGroup" element={<TelemetryDashboard />} />
                     <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/map" element={<MapView />} />
+                    <Route path="/admin" element={<AdminInventory />} />
                 </Routes>
             </main>
             <ThemeToggle />

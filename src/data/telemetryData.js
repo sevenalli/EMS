@@ -575,3 +575,26 @@ export const PLAYBACK_SPEEDS = [
     { label: '4x', value: 4 },
     { label: '8x', value: 8 }
 ]
+
+/**
+ * Groups all tags from plc_tags.json by function_name.
+ * Each tag has `tag_id` (= the MQTT key sent by the edge broker)
+ * and `description` (the human-readable label).
+ * Returns sorted [function_name, tag[]] tuples ready for rendering.
+ *
+ * @param {Array} tags - The array from plc_tags.json
+ * @returns {Array<[string, object[]]>} sorted entries of [function_name, tags]
+ */
+export const buildM5Groups = (tags) => {
+    if (!Array.isArray(tags)) return []
+    const groups = {}
+    tags.forEach(tag => {
+        if (tag.function_name && tag.tag_id) {
+            if (!groups[tag.function_name]) groups[tag.function_name] = []
+            groups[tag.function_name].push(tag)
+        }
+    })
+    return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b))
+}
+
+

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useStore, mockData } from '../store/store'
 import { useMqtt } from '../hooks/useMqtt'
@@ -45,6 +45,15 @@ import SemiGauge from '../components/SemiGauge'
 import { TAG_MAPPINGS, TIME_RANGES, PLAYBACK_SPEEDS } from '../data/telemetryData'
 
 // Crane type images
+// Category images map
+const categoryImages = {
+    'grue-mobile': '/equipement_icons/GrueMobiles.png',
+    'portique': '/equipement_icons/portique.png',
+    'chariot': '/equipement_icons/ElévateursPCs.png',
+    'reachstacker': '/equipement_icons/ElévateursFC.png',
+}
+
+// Fallback crane images
 const craneImages = {
     1: '/crane-1.png',
     2: '/crane-2.png',
@@ -54,7 +63,25 @@ const craneImages = {
 const EquipmentMonitoring = () => {
     const { equipmentId } = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
     const isDarkMode = useStore((state) => state.isDarkMode)
+
+    // ... (keep mode state) ...
+
+    // Use topic discovery
+    const { getEquipmentData, isEquipmentOnline } = useTopicDiscovery()
+    const discoveredData = getEquipmentData(equipmentId)
+
+    // RESOLVE EQUIPMENT DATA
+    // Priority: 1. Navigation State (from Dashboard), 2. Mock Data (Legacy), 3. Discovered Data (Minimal)
+    const stateEquipment = location.state?.equipment
+    const mockEquipment = mockData.equipment.find(eq => eq.id === equipmentId)
+
+    const equipment = stateEquipment || mockEquipment || {}
+
+    // Resolve Port ID (Critical for MQTT Topic)
+    // If not in equipment object, try discovery, else default to SMA
+    const portId = equipment.portId || discoveredData?.port || 'SMA'
 
     // Mode state: 'live', 'history', 'simulation'
     const [currentMode, setCurrentMode] = useState('live')
@@ -129,10 +156,6 @@ const EquipmentMonitoring = () => {
         return data
     }, [])
 
-    // Get equipment port from mock data
-    const equipmentData = mockData.equipment.find(eq => eq.id === equipmentId)
-    const portId = equipmentData?.portId || 'SMA'  // Default to SMA if not found
-
     // Dynamic topic based on port/equipmentId format
     const dynamicTopic = `${portId}/${equipmentId}`
 
@@ -142,9 +165,7 @@ const EquipmentMonitoring = () => {
         topic: dynamicTopic
     })
 
-    // Use topic discovery to get fallback data (already discovered)
-    const { getEquipmentData, isEquipmentOnline } = useTopicDiscovery()
-    const discoveredData = getEquipmentData(equipmentId)
+
 
     // Use MQTT data if available, otherwise fall back to discovered data
     const liveTelemetry = mqttTelemetry || discoveredData?.latestData || null
@@ -244,7 +265,6 @@ const EquipmentMonitoring = () => {
     }, [scenario]) // Re-run if scenario changes to update load logic correctness
 
     // Get equipment details
-    const equipment = mockData.equipment.find(eq => eq.id === equipmentId) || {}
     const { craneType = 1, accessory: defaultAccessory = 'benne', notifications = 0, status: defaultStatus = 'off' } = equipment
 
     // Derive real-time status from telemetry
@@ -624,7 +644,7 @@ const EquipmentMonitoring = () => {
                 <div className={`rounded-xl p-4 ${isDarkMode ? 'bg-[#222b45]' : 'bg-white shadow-sm'}`}>
                     <div className="flex items-center gap-4">
                         <div className={`w-20 h-20 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-[#2a3555]' : 'bg-gray-100'}`}>
-                            <img src={craneImages[craneType]} alt="Crane" className="w-16 h-16 object-contain" />
+                            <img src={categoryImages[equipment.categoryId] || craneImages[craneType]} alt="Crane" className="w-16 h-16 object-contain" />
                         </div>
                         <div className="flex-1">
                             <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{equipmentId}</h2>

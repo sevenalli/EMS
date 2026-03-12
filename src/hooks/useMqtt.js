@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import mqtt from 'mqtt'
-
+import * as mqtt from 'mqtt'
+// import { connect } from 'mqtt'
+// console.log('[useMqtt] Module loaded, mqtt connect function:', typeof connect)
 import { TAG_MAPPINGS } from '../data/telemetryData'
 
 // Mock telemetry data for simulation
@@ -59,9 +60,9 @@ const parseTelemetry = (payload) => {
  */
 export const useMqtt = (equipmentId, options = {}) => {
     const {
-        useMock = true,
+        useMock = false,
         brokerUrl = 'ws://localhost:8000/mqtt',
-        topic = 'site/pi5/generator/snapshot',
+        topic = '#/#',
     } = options
 
     const [telemetry, setTelemetry] = useState(null)
@@ -109,10 +110,20 @@ export const useMqtt = (equipmentId, options = {}) => {
             try {
                 console.log(`[useMqtt] Connecting to ${brokerUrl} with topic ${topic}`)
 
-                const client = mqtt.connect(brokerUrl, {
+                // const client = connect(brokerUrl, {
+                //    clientId: `ems-${equipmentId}-${Math.random().toString(16).slice(2, 8)}`,
+                //    clean: true,
+                //    connectTimeout: 5000,
+                //    reconnectPeriod: 3000,
+                // })
+                let connectFn = mqtt.connect
+                if (!connectFn && mqtt.default && mqtt.default.connect) {
+                    connectFn = mqtt.default.connect
+                }
+
+                const client = connectFn(brokerUrl, {
                     clientId: `ems-${equipmentId}-${Math.random().toString(16).slice(2, 8)}`,
                     clean: true,
-                    connectTimeout: 5000,
                     reconnectPeriod: 3000,
                 })
 
@@ -141,9 +152,19 @@ export const useMqtt = (equipmentId, options = {}) => {
                     try {
                         const payload = JSON.parse(message.toString())
                         const parsed = parseTelemetry(payload)
-                        setTelemetry(parsed)
-                        // Also expose raw data for notifications
-                        setRawData(payload.data || payload)
+                        
+                        // Critical fix: We must extract the actual key-value pairs inside `payload.data` 
+                        // If it's unwrapped, just use the payload itself
+                        const rawContent = payload.data || payload
+                        
+                        // Console log to help debugging the exact keys we are parsing
+                        console.log(`[useMqtt] Extracting data from ${receivedTopic}. Found ${Object.keys(rawContent).length} tags. Sample:`, Object.keys(rawContent).slice(0, 3))
+
+                        // Merge the specifically parsed values with the raw content (the actual tag values)
+                        setTelemetry({ ...parsed, ...rawContent })
+                        
+                        // Expose raw data for notifications
+                        setRawData(rawContent)
                     } catch (e) {
                         console.error('Failed to parse MQTT message:', e)
                     }

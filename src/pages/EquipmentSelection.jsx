@@ -1,6 +1,9 @@
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getInventory } from '../services/equipmentAdmin'
 import { useStore, mockData } from '../store/store'
 import { useGlobalMqtt } from '../hooks/useGlobalMqtt'
+import { useTopicDiscovery } from '../hooks/useTopicDiscovery'
 import {
     ChevronLeft,
     Check,
@@ -39,6 +42,7 @@ const EquipmentSelection = () => {
     } = useStore()
 
     // Global MQTT hook for real-time selection updates
+
     const {
         isConnected: mqttConnected,
         detectedSite,
@@ -48,11 +52,86 @@ const EquipmentSelection = () => {
         lastMessage
     } = useGlobalMqtt({ enabled: true })
 
-    const terminals = mockData.terminals
+    const [equipmentList, setEquipmentList] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const filteredEquipment = mockData.equipment.filter(eq => {
-        if (selectedTerminal && eq.terminalId !== selectedTerminal.id) return false
+    // Use Topic Discovery to find equipment not in API
+    const { onlineEquipmentCodes, getEquipmentData } = useTopicDiscovery({
+        portFilter: selectedPort?.id
+    })
+
+    useEffect(() => {
+        const fetchEquipment = async () => {
+            try {
+                const data = await getInventory()
+                const mapped = data.map(item => ({
+                    id: item.equipmentId,
+                    name: `${item.brand} ${item.model}`,
+                    categoryId: normalizeCategory(item.category),
+                    portId: item.siteName, // Assuming siteName matches port ID
+                    terminalId: null, // Backend doesn't provide terminal yet
+                    status: item.isActive ? (item.status === 'ONLINE' ? 'active' : 'offline') : 'archived',
+                    craneType: 1,
+                    accessory: 'spreader',
+                    notifications: 0
+                }))
+                setEquipmentList(mapped)
+            } catch (err) {
+                console.error("Failed to load equipment", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchEquipment()
+    }, [])
+
+    const normalizeCategory = (cat) => {
+        if (!cat) return 'grue-mobile'
+        const lower = cat.toLowerCase()
+        if (lower.includes('portique')) return 'portique'
+        if (lower.includes('chariot')) return 'chariot'
+        if (lower.includes('reach')) return 'reachstacker'
+        return 'grue-mobile'
+    }
+
+    const terminals = mockData.terminals.filter(t => !selectedPort || t.portId === selectedPort.id)
+
+    const combinedEquipment = useMemo(() => {
+        const apiIds = new Set(equipmentList.map(e => e.id))
+        const mqttItems = onlineEquipmentCodes
+            .filter(code => !apiIds.has(code))
+            .map(code => {
+                const data = getEquipmentData(code)
+                return {
+                    id: code,
+                    name: code,
+                    categoryId: 'grue-mobile',
+                    portId: data?.port || selectedPort?.id || 'SMA',
+                    terminalId: null,
+                    status: 'active',
+                    craneType: 1,
+                    accessory: 'spreader',
+                    notifications: 0,
+                    isMqttDiscovered: true
+                }
+            })
+        return [...equipmentList, ...mqttItems]
+    }, [equipmentList, onlineEquipmentCodes, getEquipmentData, selectedPort])
+
+    const filteredEquipment = combinedEquipment.filter(eq => {
+        // Filter by Port (Site)
+        if (selectedPort && eq.portId !== selectedPort.id) return false
+
+        // Filter by Terminal (if equipment has terminal assigned)
+        // If equipment has NO terminal (null), we show it for ALL terminals of that port
+        if (selectedTerminal && eq.terminalId && eq.terminalId !== selectedTerminal.id) return false
+
+        // Filter by Category
         if (selectedCategory && eq.categoryId !== selectedCategory.id) return false
+
+        // Hide archived/soft-deleted
+        if (eq.status === 'archived') return false
+
         return true
     })
 

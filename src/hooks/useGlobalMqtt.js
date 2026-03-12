@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import mqtt from 'mqtt'
+import * as mqtt from 'mqtt'
 import { useStore, mockData } from '../store/store'
 
 /**
@@ -15,7 +15,7 @@ import { useStore, mockData } from '../store/store'
 export const useGlobalMqtt = (options = {}) => {
     const {
         brokerUrl = 'ws://localhost:8000/mqtt',
-        topic = 'site/pi5/generator/snapshot',
+        topic = '#/#',
         enabled = true,
     } = options
 
@@ -142,9 +142,21 @@ export const useGlobalMqtt = (options = {}) => {
 
         const connectMqtt = async () => {
             try {
+                // Connecting...
+
                 console.log(`[GlobalMQTT] Connecting to ${brokerUrl} with topic ${topic}`)
 
-                const client = mqtt.connect(brokerUrl, {
+                let connectFn = mqtt.connect
+                if (!connectFn && mqtt.default && mqtt.default.connect) {
+                    connectFn = mqtt.default.connect
+                }
+
+                if (!connectFn) {
+                    console.error('[GlobalMQTT] Could not find mqtt.connect function', mqtt)
+                    return
+                }
+
+                const client = connectFn(brokerUrl, {
                     clientId: `ems-global-${Math.random().toString(16).slice(2, 8)}`,
                     clean: true,
                     connectTimeout: 5000,

@@ -57,6 +57,7 @@ export const useHistory = () => {
     const [error, setError] = useState('')
     const [playbackData, setPlaybackData] = useState(new Map())
     const [playbackTimestamps, setPlaybackTimestamps] = useState([])
+    const [historyData, setHistoryData] = useState([]) // Store history for components
 
     /**
      * Fetch historical data from API
@@ -127,6 +128,9 @@ export const useHistory = () => {
             setPlaybackTimestamps(sortedTimestamps);
 
             console.log('[fetchHistoricalData] Created history array with', history.length, 'frames');
+
+            // Store history data in state for components to access
+            setHistoryData(history);
 
             // We can return null for 'grouped' since we don't use it anymore for playback generation
             setIsLoading(false);
@@ -200,6 +204,7 @@ export const useHistory = () => {
     return {
         isLoading,
         error,
+        historyData, // Add historyData to return
         playbackData,
         playbackTimestamps,
         fetchHistoricalData,

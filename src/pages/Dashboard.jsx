@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useStore, mockData } from '../store/store'
+import { getInventory } from '../services/equipmentAdmin'
 import { useTopicDiscovery } from '../hooks/useTopicDiscovery'
 import EquipmentCard from '../components/EquipmentCard'
 import {
@@ -20,17 +21,50 @@ import {
     SkipBack,
     SkipForward,
     Calendar,
-    Clock
+    Clock,
+    Download,
+    FileText
 } from 'lucide-react'
 import { useState, useMemo, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useHistory } from '../hooks/useHistory'
 import { TAG_MAPPINGS, TIME_RANGES, PLAYBACK_SPEEDS } from '../data/telemetryData'
+import { exportToCSV, exportToPDF } from '../utils/exportUtils'
+import DashboardCustomizer from '../components/dashboard/DashboardCustomizer'
 
 const Dashboard = () => {
     const navigate = useNavigate()
+    const { t } = useTranslation()
     const { selectedPort, selectedEquipment, isDarkMode } = useStore()
     const [gridSize, setGridSize] = useState('normal')
     const [isRefreshing, setIsRefreshing] = useState(false)
+    const [showCustomizer, setShowCustomizer] = useState(false)
+    const [allEquipment, setAllEquipment] = useState([])
+
+    useEffect(() => {
+        getInventory().then(data => {
+            const mapped = data.map(item => ({
+                id: item.equipmentId,
+                name: `${item.brand} ${item.model}`,
+                categoryId: normalizeCategory(item.category),
+                portId: item.siteName,
+                status: item.isActive ? (item.status === 'ONLINE' ? 'active' : 'offline') : 'archived',
+                craneType: 1,
+                accessory: 'spreader',
+                notifications: 0
+            }))
+            setAllEquipment(mapped)
+        }).catch(console.error)
+    }, [])
+
+    const normalizeCategory = (cat) => {
+        if (!cat) return 'grue-mobile'
+        const lower = cat.toLowerCase()
+        if (lower.includes('portique')) return 'portique'
+        if (lower.includes('chariot')) return 'chariot'
+        if (lower.includes('reach')) return 'reachstacker'
+        return 'grue-mobile'
+    }
 
     // Topic discovery hook for real-time equipment detection
     const {
@@ -45,50 +79,49 @@ const Dashboard = () => {
         portFilter: selectedPort?.id || null  // Filter by selected port if any
     })
 
-    // Build equipment list: combine mock data with live MQTT status
+    // Build equipment list: show what user selected, enriched with live MQTT status.
+    // Falls back to all non-archived API equipment when nothing is selected.
     const equipmentList = useMemo(() => {
-        // If we have online equipment from MQTT, prioritize those
-        if (onlineEquipmentCodes.length > 0) {
-            // Get active equipment from MQTT
-            const activeList = onlineEquipmentCodes.map(code => {
-                // Check if it exists in mock data
-                const mockEntry = mockData.equipment.find(eq => eq.id === code)
-                const mqttData = getEquipmentData(code)
-
-                return {
-                    id: code,
-                    name: mockEntry?.name || `Equipment ${code}`,
-                    categoryId: mockEntry?.categoryId || 'grue-mobile',
-                    portId: mqttData?.port || selectedPort?.id || 'SMA',
-                    status: 'active',  // Active since it's online
-                    craneType: mockEntry?.craneType || 1,
-                    accessory: mockEntry?.accessory || 'benne',
-                    notifications: mockEntry?.notifications || 0,
-                    isOnline: true,
-                    mqttData: mqttData?.latestData
-                }
-            })
-            return activeList
-        }
-
-        // Fallback to selected equipment from mock data (with online status)
-        if (selectedEquipment.length > 0) {
-            return mockData.equipment
-                .filter(eq => selectedEquipment.includes(eq.id))
-                .map(eq => ({
-                    ...eq,
-                    isOnline: isEquipmentOnline(eq.id),
-                    mqttData: getEquipmentData(eq.id)?.latestData
-                }))
-        }
-
-        // Default: show first 4 equipment with online status
-        return mockData.equipment.slice(0, 4).map(eq => ({
+        const enrich = (eq) => ({
             ...eq,
             isOnline: isEquipmentOnline(eq.id),
             mqttData: getEquipmentData(eq.id)?.latestData
-        }))
-    }, [onlineEquipmentCodes, selectedEquipment, selectedPort, isEquipmentOnline, getEquipmentData])
+        })
+
+        if (selectedEquipment.length > 0) {
+            // Show user-selected equipment (both online and offline)
+            const apiItems = allEquipment
+                .filter(eq => selectedEquipment.includes(eq.id) && eq.status !== 'archived')
+                .map(enrich)
+
+            // Include MQTT-discovered equipment the user selected but not yet in API
+            const apiIds = new Set(apiItems.map(e => e.id))
+            const mqttOnlyItems = selectedEquipment
+                .filter(code => !apiIds.has(code) && onlineEquipmentCodes.includes(code))
+                .map(code => {
+                    const mqttData = getEquipmentData(code)
+                    return {
+                        id: code,
+                        name: `Equipment ${code}`,
+                        categoryId: 'grue-mobile',
+                        portId: mqttData?.port || selectedPort?.id || 'SMA',
+                        status: 'active',
+                        craneType: 1,
+                        accessory: 'benne',
+                        notifications: 0,
+                        isOnline: true,
+                        mqttData: mqttData?.latestData
+                    }
+                })
+
+            return [...apiItems, ...mqttOnlyItems]
+        }
+
+        // No selection yet — show all non-archived API equipment
+        return allEquipment
+            .filter(eq => eq.status !== 'archived')
+            .map(enrich)
+    }, [selectedEquipment, allEquipment, onlineEquipmentCodes, selectedPort, isEquipmentOnline, getEquipmentData])
 
     // History Mode State
     const [isHistoryMode, setIsHistoryMode] = useState(false)
@@ -164,6 +197,31 @@ const Dashboard = () => {
     const handleRefresh = () => {
         setIsRefreshing(true)
         setTimeout(() => setIsRefreshing(false), 1000)
+    }
+
+    // Export handlers
+    const handleExportCSV = () => {
+        if (historyData && historyData.length > 0) {
+            const exportData = historyData.map((item, index) => ({
+                timestamp: item.timestamp?.toISOString() || new Date().toISOString(),
+                index,
+                ...item.data
+            }))
+            exportToCSV(exportData, `dashboard-export-${singleEquipment?.id || 'all'}`)
+        }
+    }
+
+    const handleExportPDF = () => {
+        if (historyData && historyData.length > 0) {
+            const exportData = historyData.map((item, index) => ({
+                timestamp: item.timestamp?.toISOString() || new Date().toISOString(),
+                index,
+                ...item.data
+            }))
+            exportToPDF(exportData, `dashboard-report-${singleEquipment?.id || 'all'}`, {
+                title: `${t('dashboard.title')} - ${singleEquipment?.id || t('common.allEquipment')}`
+            })
+        }
     }
 
     const gridClasses = {
@@ -285,6 +343,28 @@ const Dashboard = () => {
                                 </button>
                             </div>
 
+                            {/* Export Buttons (only in history mode with data) */}
+                            {isHistoryMode && historyData && historyData.length > 0 && (
+                                <div className={`flex items-center rounded-lg p-1 ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-sm'}`}>
+                                    <button
+                                        onClick={handleExportCSV}
+                                        className={`p-2 rounded-md transition-all ${isDarkMode ? 'text-gray-400 hover:text-green-400' : 'text-gray-500 hover:text-green-600'}`}
+                                        title={t('common.exportCSV')}
+                                        aria-label="Export to CSV"
+                                    >
+                                        <Download size={18} />
+                                    </button>
+                                    <button
+                                        onClick={handleExportPDF}
+                                        className={`p-2 rounded-md transition-all ${isDarkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-600'}`}
+                                        title={t('common.exportPDF')}
+                                        aria-label="Export to PDF"
+                                    >
+                                        <FileText size={18} />
+                                    </button>
+                                </div>
+                            )}
+
                             {/* Refresh Button */}
                             <button
                                 onClick={handleRefresh}
@@ -292,7 +372,8 @@ const Dashboard = () => {
                                     ? 'bg-gray-800 text-gray-400 hover:text-white'
                                     : 'bg-white shadow-sm text-gray-500 hover:text-gray-700'
                                     }`}
-                                title="Rafraîchir"
+                                title={t('common.refresh')}
+                                aria-label="Refresh"
                             >
                                 <RefreshCw
                                     size={18}
@@ -300,13 +381,15 @@ const Dashboard = () => {
                                 />
                             </button>
 
-                            {/* Settings Button */}
+                            {/* Settings/Customizer Button */}
                             <button
+                                onClick={() => setShowCustomizer(true)}
                                 className={`p-2.5 rounded-lg transition-all ${isDarkMode
                                     ? 'bg-gray-800 text-gray-400 hover:text-white'
                                     : 'bg-white shadow-sm text-gray-500 hover:text-gray-700'
                                     }`}
-                                title="Paramètres"
+                                title={t('common.settings')}
+                                aria-label="Settings"
                             >
                                 <Settings size={18} />
                             </button>
@@ -314,12 +397,19 @@ const Dashboard = () => {
                     </div>
                 </div>
 
+                {/* Dashboard Customizer Panel */}
+                <DashboardCustomizer
+                    isOpen={showCustomizer}
+                    onClose={() => setShowCustomizer(false)}
+                />
+
                 {/* Equipment Grid */}
                 {equipmentList.length > 0 ? (
                     <div className={`grid ${gridClasses[gridSize]} gap-6`}>
                         {equipmentList.map((equipment) => (
                             <EquipmentCard
                                 key={equipment.id}
+                                equipment={equipment}
                                 equipmentId={equipment.id}
                                 initialStatus={equipment.status}
                                 isOnline={isHistoryMode ? false : equipment.isOnline}

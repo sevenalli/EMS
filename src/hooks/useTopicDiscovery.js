@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import mqtt from 'mqtt'
+import * as mqtt from 'mqtt'
 import { useStore } from '../store/store'
 import { parseTelemetry } from './useMqtt'
 
@@ -75,7 +75,17 @@ export const useTopicDiscovery = (options = {}) => {
                 const topicPattern = portFilter ? `${portFilter.toLowerCase()}/#` : '+/+'
                 console.log(`[TopicDiscovery] Connecting to ${brokerUrl}, subscribing to ${topicPattern}`)
 
-                const client = mqtt.connect(brokerUrl, {
+                let connectFn = mqtt.connect
+                if (!connectFn && mqtt.default && mqtt.default.connect) {
+                    connectFn = mqtt.default.connect
+                }
+
+                if (!connectFn) {
+                    console.error('[TopicDiscovery] Could not find mqtt.connect', mqtt)
+                    return
+                }
+
+                const client = connectFn(brokerUrl, {
                     clientId: `ems-discovery-${Math.random().toString(16).slice(2, 8)}`,
                     clean: true,
                     connectTimeout: 5000,
@@ -110,7 +120,11 @@ export const useTopicDiscovery = (options = {}) => {
 
                         const { port, equipmentCode } = parsed
                         const payload = JSON.parse(message.toString())
-                        const telemetry = parseTelemetry(payload)
+                        const parsedData = parseTelemetry(payload)
+                        const rawContent = payload.data || payload
+                        
+                        // Merge parsed specific data with raw dynamic tags
+                        const telemetry = { ...parsedData, ...rawContent }
 
                         // Update active equipment
                         setActiveEquipment(prev => ({
